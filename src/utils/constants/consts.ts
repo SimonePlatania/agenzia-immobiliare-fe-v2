@@ -1,0 +1,86 @@
+export const TITLE_APP = "Comunicazioni preventive di miscelazione"
+export const APP_NAME = "Miscelazione"
+export const DICHIARAZIONE_ACCESSIBILITA = "Dichiarazione di accessibilità"
+export const AGENZIA_DOGANE = "Agenzia delle dogane e dei Monopoli"
+
+export const INTEGER_REGEX = /^[0-9]*$/
+export const DOUBLE_REGEX = /^(\d+(\.\d+)?|)$/
+
+export enum Session {
+    TOTAL_SESSION_TIME = 30 * 60,
+    SHOW_SESSION_MESSAGE_TIME =5 * 60
+}
+
+export enum Constants {
+    DATE_MAX = "2099-12-31",
+    FORMAT_DATE_PATTERN = "yyyy-MM-dd",
+    EMPTY_DATA = "Nessun risultato",
+    URL_LOGOUT = "https://www.adm.gov.it/portale/c/portal/logout",
+    URL_LOGOUT_VAL = "https://portaleunicoval.adm.gov.it/portale/c/portal/logout",
+    URL_AREA_PROVENIENZA = "https://portaleunicosvil.adm.gov.it/portale/area-riservata-dogane",
+    URL_ASSISTENZA = "https://portaleunicosvil.adm.gov.it/portale/contatti-e-assistenza",
+    URL_INFO_ASSISTENZA = "https://www.adm.gov.it/portale/",
+    FILENAME_CSV = "MAU ADM Pubblicazione.csv",
+    ROWS_PAGE = 10,
+    WINDOW_LIMIT = 1500
+}
+
+export enum InputTypes {
+    TEXT = "text",
+    PASSWORD = "password",
+    NUMBER = "number",
+    SELECT = "select",
+    DATE = "date",
+    DATE_TIME = "datetime-local",
+    ORARIO = "orario",
+    RADIO = "radio",
+    CHECKBOX = "checkbox",
+    TEXT_BUTTON = "textButton",
+    FILE = "file",
+    SELECT_SEARCH = "selectSearch",
+    TEXTAREA = "textarea",
+    COD_DITTA_SELECT = "inputCodDittaSelect",
+    HOUR_PICKER = "hourPicker"
+}
+
+export enum StatoSelectSearch {
+    CARICAMENTO = "caricamento",
+    COMPLETATO = "completato",
+    MESSAGE_CARICAMENTO = "Caricamento in corso delle opzioni disponibili...",
+    MESSAGE_DISABLED = "Opzioni disabilitate"
+}
+
+export const today = () => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return today
+}
+
+export enum Errors {
+    TYPE_REQUIRED = "Campo obbligatorio",
+    EMPTY_PRODOTTI = "Aggiungere almeno un prodotto",
+    TYPE_DATE = "Il campo deve contenere una data valida",
+    MIN_TODAY = "La data non può essere antecedente alla data odierna",
+    TYPE_ORARIO = "Il campo deve contenere un orario valido",
+    TYPE_EMAIL = "Il campo deve contenere un indirizzo email valido",
+    TYPE_NUMBER = "Il campo deve essere numerico",
+    TYPE_POSITIVE = "Il campo deve contenere un numero positivo",
+    TYPE_INTEGER = "Il campo deve contenere un numero intero",
+    TYPE_MAX = "Il campo deve contenere massimo ${max} caratteri",
+    TYPE_MIN = "Il campo deve contenere minimo ${min} caratteri",
+    INTERNAL = "Errore interno. Riprovare più tardi.",
+    TODAY_MAX = "Il campo non può essere successivo alla data odierna"
+}
+
+export enum Sections {
+    ACQUISIZIONE = "acquisizione",
+    MODIFICA = "modifica",
+    INVIA = "invia",
+    CONSULTAZIONE = "consultazione",
+    ANNULLAMENTO = "annullamento"
+}
+
+export enum DLR {
+    COMPILATORE = "compilatore",
+    SOTTOSCRITTORE = "sottoscrittore"
+}

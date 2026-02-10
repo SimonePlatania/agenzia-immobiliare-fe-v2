@@ -1,0 +1,90 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:json/recommended",
+    "plugin:jest-dom/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "jsx-a11y",
+    "json",
+    "jest-dom",
+    "babel",
+    "html"
+  ],
+  "ignorePatterns": [
+    "test-report",
+    "public",
+    "**/external-uikit/*",
+    "*.svg",
+    "*.png",
+    "*.jpeg",
+    "*.jpg",
+    "*.yaml",
+    "*.yml"
+  ],
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "eol-last": "warn",
+    "no-void": "off",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unknown-property": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/prop-types": "off",
+    "generator-star-spacing": ["error", { "before": false, "after": true }],
+    "react/prefer-stateless-function": "warn",
+    "react/jsx-indent": "off",
+    "react/jsx-closing-bracket-location": "off",
+    "react/jsx-closing-tag-location": "off",
+    "react/jsx-indent-props": "off",
+    "indent": "off",
+    "space-before-function-paren": "off",
+    "new-cap": ["warn", { "newIsCapExceptions": ["memo"] }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "__CONTEXT_PATH__": "readonly",
+    "__API_PATH__": "readonly",
+    "__HOST__": "readonly",
+    "__PORT__": "readonly"
+  },
+  "overrides": [
+    {
+      "files": ["vite.config.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
+}

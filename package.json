@@ -1,0 +1,153 @@
+{
+  "name": "agenzia-immobiliare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vite.config.ts",
+  "type": "module",
+  "scripts": {
+    "start:prod": "vite preview --port 5000",
+    "start:dev": "vite",
+    "build:dev": "vite build --mode development",
+    "build:prod": "vite build --mode production",
+    "test": "jest",
+    "lint": "eslint --fix \"**/*.{js,ts,jsx,tsx,mjs,cjs,json,html}\"",
+    "lint:print": "eslint --fix \"**/*.{js,ts,jsx,tsx,mjs,cjs,json,html}\" -o ./lint-errors.html -f html",
+    "lint:nowarn": "eslint --fix --quiet \"**/*.{js,ts,jsx,tsx,mjs,cjs,json,html}\"",
+    "lint:nowarn:print": "eslint --fix --quiet \"**/*.{js,ts,jsx,tsx,mjs,cjs,json,html}\" -o ./lint-errors.html -f html",
+    "sonar": "sonar-scanner",
+    "platform": "run-script-os",
+    "platform:win32": "echo 'Skipping this hook in Windows platform'",
+    "platform:nix": "exec < /dev/tty && git cz --hook || true",
+    "commit": "git-cz"
+  },
+  "license": "ISC",
+  "jest-junit": {
+    "outputDirectory": "test-report",
+    "outputName": "TESTS-react-starter-kit.xml"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm test && npm run build:dev",
+      "prepare-commit-msg": "npm run platform",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@hookform/resolvers": "^3.4.2",
+    "@manaflair/redux-batch": "^1.0.0",
+    "@popperjs/core": "^2.11.8",
+    "@reduxjs/toolkit": "^1.9.3",
+    "axios": "^1.7.2",
+    "clsx": "^1.1.1",
+    "core-js": "^3.8.3",
+    "date-fns": "^2.29.3",
+    "deep-object-diff": "^1.1.9",
+    "js-file-download": "^0.4.12",
+    "lodash": "^4.17.21",
+    "prop-types": "^15.7.2",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.7.2",
+    "react-bootstrap-typeahead": "^7.0.0-rc.5",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.5",
+    "react-jss": "^10.6.0",
+    "react-loading-skeleton": "^3.1.1",
+    "react-popper": "^2.3.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.23.1",
+    "react-select": "^5.7.3",
+    "redux": "^4.2.1",
+    "redux-persist": "^6.0.0",
+    "sweetalert2": "^11.7.3",
+    "vite-plugin-eslint2": "^5.0.4",
+    "yup": "^0.31.1",
+    "@react-buddy/ide-toolbox": "^2.4.0"
+  },
+  "overrides": {
+    "electron-to-chromium": "1.5.254",
+    "update-browserslist-db": "1.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/eslint-parser": "^7.12.17",
+    "@babel/preset-env": "^7.24.5",
+    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.1",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^15.0.7",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/core-js": "^2.5.8",
+    "@types/history": "^4.7.8",
+    "@types/jquery": "^3.5.14",
+    "@types/lodash": "^4.17.4",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/yup": "^0.29.11",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "babel-jest": "^29.7.0",
+    "commitizen": "^4.2.2",
+    "concurrently": "^5.3.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-config-standard-jsx": "^11.0.0",
+    "eslint-config-standard-react": "^13.0.0",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-html": "^8.1.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest-dom": "^5.4.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-testing-library": "^6.2.2",
+    "express": "^4.19.2",
+    "http-proxy-middleware": "^3.0.5",
+    "husky": "^9.0.11",
+    "jest": "^29.7.0",
+    "jest-junit": "^12.0.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^2.2.1",
+    "regenerator-runtime": "^0.13.7",
+    "run-script-os": "^1.1.4",
+    "typescript": "^5.9.2",
+    "vite": "^7.2.6",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "no-unused-vars": "off",
+      "react/prop-types": "off"
+    }
+  }
+}

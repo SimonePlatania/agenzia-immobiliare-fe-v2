@@ -1,0 +1,11 @@
+public
+test-report
+**/external-uikit/*
+*.vg
+*.svg
+*.png
+*.jpeg
+*.jpg
+*.yaml
+*.yml
+lint-errors.html
