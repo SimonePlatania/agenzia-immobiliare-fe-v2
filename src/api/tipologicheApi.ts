@@ -4,7 +4,7 @@ import { TipologicaRest } from "@/utils/constants/endpoints"
 
 export const tipologicheApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
-        getRuoli: build.query<Array<Tipologica<string>>, void>({
+        getRuoli: build.query<Array<Tipologica<number>>, void>({
             query: () => ({
                 url: `${TipologicaRest.TIPOLOGICA}${TipologicaRest.GET_TIPO_RUOLO}`,
                 method: "GET"
@@ -17,7 +17,7 @@ export const tipologicheApi = rootApi.injectEndpoints({
                     value: ruolo.descrizione
                 }))
             },
-            providesTags: ["Ruoli"]
+            providesTags: ["Tipologiche"]
         })
     })
 })
