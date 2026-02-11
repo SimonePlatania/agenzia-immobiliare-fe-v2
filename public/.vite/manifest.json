@@ -1,13 +1,15 @@
 {
   "index.html": {
-    "file": "dist/index-DYgrqvBK.js",
+    "file": "dist/index-B47a8sIj.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
-      "dist/index-BG6y5-TI.css"
+      "dist/index-C7fVykgq.css"
     ],
     "assets": [
+      "dist/bootstrap-icons-mSm7cUeB.woff2",
+      "dist/bootstrap-icons-BeopsB42.woff",
       "dist/fa-brands-400-D_cYUPeE.woff2",
       "dist/fa-brands-400-D1LuMI3I.ttf",
       "dist/fa-regular-400-BjRzuEpd.woff2",
@@ -49,5 +51,13 @@
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2": {
     "file": "dist/fa-v4compatibility-C9RhG_FT.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "dist/bootstrap-icons-BeopsB42.woff",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "dist/bootstrap-icons-mSm7cUeB.woff2",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   }
 }

@@ -5,6 +5,8 @@ import {useState} from "react";
 import {Alert, Button, Col, Row} from "react-bootstrap";
 import CustomInput from "@/custom/utils/CustomInput";
 import {InputTypes} from "@/utils/constants/consts";
+import { useNavigate } from "react-router-dom"
+import { useGetRuoliQuery } from "@/api/tipologicheApi"
 
 const formConfig: UseFormProps<UtenteRequest> = {
     defaultValues: {
@@ -22,29 +24,33 @@ const formConfig: UseFormProps<UtenteRequest> = {
 }
 
 export const Registrazione = () => {
-    const [registazioneUser, {isLoading, error}] = useRegistrazioneUserMutation();
+    const [registrazioneUser, { isLoading, error }] =
+        useRegistrazioneUserMutation()
+    const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const form: UseFormReturn<any> = useForm<UtenteRequest>(formConfig);
 
-    const handleRegister = form.handleSubmit(async (data) => {
+    const handleRegister = async (
+        data,
+        setErrorMessage,
+        registrazioneUser
+    ) => {
         setErrorMessage(null)
         try {
-            await registazioneUser(data).unwrap();
+            await registrazioneUser(data).unwrap();
         } catch (err: any) {
             setErrorMessage(err?.data?.messaggio || "Errore generico")
         }
-    });
+    };
 
     return (
-        <>
+        <form
+            onSubmit={form.handleSubmit((values) =>
+                handleRegister(values, setErrorMessage, registrazioneUser)
+            )}
+        >
             <fieldset className="fieldset-bordered mt-4">
                 <legend>Registrazione</legend>
-
-                {errorMessage && (
-                    <Alert variant="danger" onClose={() => setErrorMessage(null)} dismissible>
-                        {errorMessage}
-                    </Alert>
-                )}
 
                 <CustomInput
                     field="nome"
@@ -92,13 +98,15 @@ export const Registrazione = () => {
                     placeholder="Inserisci il ruolo"
                     type={InputTypes.SELECT}
                     form={form}
+                    options={ruoli ?? []}
+                    isLoading={ruoliLoading}
                 />
 
                 <Row>
                     <Col sm={12} md={12}>
                         <Button
                             variant="outline-dark"
-                            onClick={handleRegister}
+                            type={"submit"}
                             disabled={isLoading}
                             className="mt-3"
                         >
@@ -106,8 +114,8 @@ export const Registrazione = () => {
                         </Button>
                         <Button
                             variant="outline-dark"
-                            onClick={handleRegister}
                             disabled={isLoading}
+                            // onClick={() => navigate('/login')}
                             className="mt-3"
                         >
                             {isLoading ? "Accesso..." : "LOGIN"}
@@ -115,7 +123,15 @@ export const Registrazione = () => {
                     </Col>
                 </Row>
             </fieldset>
-        </>
+            {errorMessage && (
+                <Alert
+                    style={{ marginTop: "10px" }}
+                    variant="danger"
+                >
+                    {errorMessage}
+                </Alert>
+            )}
+        </form>
     )
 }
 

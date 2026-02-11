@@ -17,7 +17,10 @@ const formConfig: UseFormProps<LoginRequest> = {
     }
 };
 
-const handleLogin = async (data, setErrorMessage, loginUser) => {
+export const handleLogin = async (
+    data,
+    setErrorMessage,
+    loginUser) => {
     setErrorMessage(null)
     try {
         await loginUser(data).unwrap();
@@ -33,15 +36,14 @@ const Login = () => {
 
 
     return (
-        <form onSubmit={form.handleSubmit((values) => handleLogin(values, setErrorMessage, loginUser))}>
+        <form
+            onSubmit={form.handleSubmit((values) =>
+                handleLogin(values, setErrorMessage, loginUser)
+            )}
+        >
             <fieldset className="fieldset-bordered mt-4">
                 <legend>Login</legend>
 
-                {errorMessage && (
-                    <Alert variant="danger" onClose={() => setErrorMessage(null)} dismissible>
-                        {errorMessage}
-                    </Alert>
-                )}
                 <CustomInput
                     field="email"
                     descr="Email"
@@ -60,13 +62,22 @@ const Login = () => {
 
                 <Button
                     variant="outline-dark"
-                    type={'submit'}
+                    type={"submit"}
                     disabled={isLoading}
-                    className="mt-3"
+                    style={{ marginTop: "10px" }}
                 >
                     {isLoading ? "Accesso..." : "ACCEDI"}
                 </Button>
             </fieldset>
+
+            {errorMessage && (
+                <Alert
+                    style={{ marginTop: "10px" }}
+                    variant="danger"
+                >
+                    {errorMessage}
+                </Alert>
+            )}
         </form>
     )
 }

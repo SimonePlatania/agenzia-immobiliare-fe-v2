@@ -51,6 +51,7 @@ const {actions, reducer} = tipologicheSlice
 export const {
     setTipologica,
     setListaTipologicheProdMiscelati,
+    setTipologicaRuoli,
     resetTipologica
 } = actions
 export default tipologicheSlice.reducer

@@ -268,9 +268,10 @@ const CustomInput = ({
     }
 
     const [showPassword, setShowPassword] = useState(false)
+
     const renderInputPassword = (): React.JSX.Element => {
         return (
-            <div className="input-group">
+            <div className="input-wrapper">
                 <input
                     type={showPassword ? "text" : "password"}
                     id={field}
@@ -278,10 +279,7 @@ const CustomInput = ({
                         value
                             ? value
                             : formValue ??
-                              (readOnly
-                                  ? // "Non presente"
-                                    ""
-                                  : "")
+                            (readOnly ? "" : "")
                     }
                     name={field}
                     aria-label={ariaLabel ?? field}
@@ -295,9 +293,8 @@ const CustomInput = ({
                     }}
                     onFocus={async (e: any) => {
                         onFocusEvent ? onFocusEvent(e) : ""
-                        // await form.trigger(formField)
                     }}
-                    className={`form-control ${
+                    className={`form-control has-icon ${
                         isInvalid() ? "is-invalid" : ""
                     }`}
                     disabled={disabled ? disabled : false}
@@ -305,15 +302,12 @@ const CustomInput = ({
                     placeholder={placeholder ? placeholder : ""}
                     style={style}
                 />
+
                 <button
-                    className={`btn btn-outline-primary  ${
-                        isInvalid()
-                            ? "is-invalid passwordClassError"
-                            : "text-secondary passwordClass"
-                    }`}
-                    style={{ borderColor: "#ced4da" }}
+                    className="password-toggle"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Nascondi password" : "Mostra password"}
                 >
                     <i
                         className={`bi ${
