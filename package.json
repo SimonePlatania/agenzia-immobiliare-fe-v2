@@ -47,8 +47,10 @@
     "@hookform/resolvers": "^3.4.2",
     "@manaflair/redux-batch": "^1.0.0",
     "@popperjs/core": "^2.11.8",
+    "@react-buddy/ide-toolbox": "^2.4.0",
     "@reduxjs/toolkit": "^1.9.3",
     "axios": "^1.7.2",
+    "bootstrap-icons": "^1.13.1",
     "clsx": "^1.1.1",
     "core-js": "^3.8.3",
     "date-fns": "^2.29.3",
@@ -71,8 +73,7 @@
     "redux-persist": "^6.0.0",
     "sweetalert2": "^11.7.3",
     "vite-plugin-eslint2": "^5.0.4",
-    "yup": "^0.31.1",
-    "@react-buddy/ide-toolbox": "^2.4.0"
+    "yup": "^0.31.1"
   },
   "overrides": {
     "electron-to-chromium": "1.5.254",

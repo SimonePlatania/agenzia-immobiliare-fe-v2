@@ -64,6 +64,71 @@ export interface LoginResponse {
     ruolo: string
 }
 
+//DOMANDA
+export interface DomandaRequest {
+    id: number,
+    dataDomanda: Date | string,
+    domanda: string,
+    annuncioId: number,
+    utenteId: number
+}
+
+export interface DomandaResponse {
+    id: number,
+    dataDomanda: Date | string,
+    domanda: string,
+    annuncioId: number,
+    utenteId: number,
+    lettoDaUtente: string
+}
+
+//CAMBIO PASSWORD
+export interface PasswordChangeRequest {
+    vecchiaPassword: string,
+    nuovaPassword: string
+}
+
+//RICERCA
+export interface RicercaRequest {
+    tipologiaAnnuncioId?: string,
+    tipologiaImmobileId?: string,
+    prezzoDa?: number,
+    prezzoAl?: number,
+    dataDal?: Date | string,
+    dataAl?: Date | string,
+    mqMinimi?: number,
+    stanzeMinime?: number,
+    citta?: string,
+    ascensore?: number,
+    garage?: number,
+    terrazzo?: number,
+    postoAuto?: number,
+    zona?: string,
+    speseAggiuntive?: number,
+    titolo?: string
+}
+
+export interface RicercaResponse {
+    annunci: Array<Annuncio>,
+    paginazione: Paginazione
+}
+
+//PAGINAZIONE
+export interface Paginazione {
+    countElementi: number
+    numPagina: number
+    elementiPagina: number
+    pagineTotali: number
+}
+
+export interface RispostaDTO {
+    domandaId: number,
+    annuncioId: number,
+    utenteId: number,
+    risposta: string,
+    lettoDaUtente: string
+}
+
 //UTILITIES
 export type OptionList =
     | Tipologica<any>

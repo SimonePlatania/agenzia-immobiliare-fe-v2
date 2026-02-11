@@ -1,9 +1,8 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import {AppPaths} from "@/utils/constants/routes";
-import {Session} from "@/utils/constants/consts";
-import {setNavigateTo, setSessionShowMessage, setSessionTime} from "@/store/slices/uiSlice";
+import {setNavigateTo} from "@/store/slices/uiSlice";
 import type {Dispatch} from "react";
-import {type AnyAction, isFulfilled, isRejectedWithValue} from "@reduxjs/toolkit";
+import {type AnyAction, isRejectedWithValue} from "@reduxjs/toolkit";
 
 export const ROOT_API_PRIVATE = `${__CONTEXT_PATH__}/api`
 
@@ -21,16 +20,16 @@ export const unauthenticatedMiddleware =
 export const successMiddleware =
     (store: any) => (next: Dispatch<any>) => (action: AnyAction) => {
         const user = store.getState().user
-        if (isFulfilled(action)) {
-            store.dispatch(
-                setSessionTime(
-                    user.sessionTimeout || Session.TOTAL_SESSION_TIME
-                )
-            )
-            if (store.getState().ui.showMessage) {
-                store.dispatch(setSessionShowMessage(false))
-            }
-        }
+        // if (isFulfilled(action)) {
+        //     store.dispatch(
+        //         setSessionTime(
+        //             user.sessionTimeout || Session.TOTAL_SESSION_TIME
+        //         )
+        //     )
+        //     if (store.getState().ui.showMessage) {
+        //         store.dispatch(setSessionShowMessage(false))
+        //     }
+        // }
         return next(action)
     }
 
