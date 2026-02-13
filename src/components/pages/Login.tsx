@@ -5,6 +5,9 @@ import {InputTypes} from "@/utils/constants/consts";
 import {useForm, UseFormProps, UseFormReturn} from "react-hook-form";
 import {LoginRequest} from "@/utils/types";
 import {useState} from "react";
+import {createErrorGrowl, createSuccessGrowl} from "@/custom/modal/Growl";
+import {setGrowl} from "@/store/slices/uiSlice";
+import {useDispatch} from "react-redux";
 
 const formConfig: UseFormProps<LoginRequest> = {
     defaultValues: {
@@ -20,12 +23,16 @@ const formConfig: UseFormProps<LoginRequest> = {
 export const handleLogin = async (
     data,
     setErrorMessage,
-    loginUser) => {
+    loginUser,
+    dispatch) => {
     setErrorMessage(null)
     try {
-        await loginUser(data).unwrap();
+        const result = await loginUser(data).unwrap();
+        dispatch(setGrowl(createSuccessGrowl(`Benvenuto ${result.nome || ''}!`)))
     } catch (err: any) {
-        setErrorMessage(err?.data?.messaggio || "Errore generico")
+        const messaggio = err?.data?.messaggio || "Errore generico"
+        setErrorMessage(messaggio)
+        dispatch(setGrowl(createErrorGrowl(messaggio)))
     }
 }
 
@@ -33,15 +40,15 @@ const Login = () => {
     const [loginUser, {isLoading, error}] = useLoginUserMutation();
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const form: UseFormReturn<any> = useForm<LoginRequest>(formConfig);
-
+    const dispatch = useDispatch();
 
     return (
         <form
             onSubmit={form.handleSubmit((values) =>
-                handleLogin(values, setErrorMessage, loginUser)
+                handleLogin(values, setErrorMessage, loginUser, dispatch)
             )}
         >
-            <fieldset className="fieldset-bordered mt-4">
+            <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Login</legend>
 
                 <CustomInput
@@ -64,7 +71,7 @@ const Login = () => {
                     variant="outline-dark"
                     type={"submit"}
                     disabled={isLoading}
-                    style={{ marginTop: "10px" }}
+                    style={{marginTop: "10px"}}
                 >
                     {isLoading ? "Accesso..." : "ACCEDI"}
                 </Button>
@@ -72,7 +79,7 @@ const Login = () => {
 
             {errorMessage && (
                 <Alert
-                    style={{ marginTop: "10px" }}
+                    style={{marginTop: "10px"}}
                     variant="danger"
                 >
                     {errorMessage}

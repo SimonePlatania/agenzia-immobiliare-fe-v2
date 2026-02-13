@@ -1,12 +1,14 @@
 import {useForm, UseFormProps, UseFormReturn} from "react-hook-form";
 import {UtenteRequest} from "@/utils/types";
 import {useRegistrazioneUserMutation} from "@/api/utenteApi";
-import {useState} from "react";
-import {Alert, Button, Col, Row} from "react-bootstrap";
+import {Button, Col, Row} from "react-bootstrap";
 import CustomInput from "@/custom/utils/CustomInput";
 import {InputTypes} from "@/utils/constants/consts";
-import { useNavigate } from "react-router-dom"
-import { useGetRuoliQuery } from "@/api/tipologicheApi"
+import {useGetRuoliQuery} from "@/api/tipologicheApi"
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setGrowl} from "@/store/slices/uiSlice";
+import {createErrorGrowl} from "@/custom/modal/Growl";
 
 const formConfig: UseFormProps<UtenteRequest> = {
     defaultValues: {
@@ -24,32 +26,28 @@ const formConfig: UseFormProps<UtenteRequest> = {
 }
 
 export const Registrazione = () => {
-    const [registrazioneUser, { isLoading, error }] =
+    const [registrazioneUser, {isLoading, error}] =
         useRegistrazioneUserMutation()
-    const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const {data: ruoli, isLoading: ruoliLoading} = useGetRuoliQuery()
     const form: UseFormReturn<any> = useForm<UtenteRequest>(formConfig);
 
-    const handleRegister = async (
-        data,
-        setErrorMessage,
-        registrazioneUser
-    ) => {
-        setErrorMessage(null)
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleRegister = async () => {
         try {
-            await registrazioneUser(data).unwrap();
+            await registrazioneUser(form.watch()).unwrap();
         } catch (err: any) {
-            setErrorMessage(err?.data?.messaggio || "Errore generico")
+            const messaggio = err?.data?.messaggio || "Errore generico"
+            dispatch(setGrowl(createErrorGrowl(messaggio)));
         }
     };
 
     return (
         <form
-            onSubmit={form.handleSubmit((values) =>
-                handleRegister(values, setErrorMessage, registrazioneUser)
-            )}
+            onSubmit={form.handleSubmit(handleRegister)}
         >
-            <fieldset className="fieldset-bordered mt-4">
+            <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Registrazione</legend>
 
                 <CustomInput
@@ -115,7 +113,7 @@ export const Registrazione = () => {
                         <Button
                             variant="outline-dark"
                             disabled={isLoading}
-                            // onClick={() => navigate('/login')}
+                            onClick={() => navigate('/login')}
                             className="mt-3"
                         >
                             {isLoading ? "Accesso..." : "LOGIN"}
@@ -123,14 +121,6 @@ export const Registrazione = () => {
                     </Col>
                 </Row>
             </fieldset>
-            {errorMessage && (
-                <Alert
-                    style={{ marginTop: "10px" }}
-                    variant="danger"
-                >
-                    {errorMessage}
-                </Alert>
-            )}
         </form>
     )
 }

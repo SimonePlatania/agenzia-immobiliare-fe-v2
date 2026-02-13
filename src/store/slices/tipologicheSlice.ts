@@ -1,18 +1,14 @@
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import type {Tipologica} from "@/utils/types";
-
-export interface TipologicheState {
-    codice: string
-    descrizione: string
-    tipologicaProdMiscelatiList: Array<Tipologica<string>>
-    tipologicaRuoli: Array<Tipologica<string>>
-}
+import type {Tipologica, TipologicheState} from "@/utils/types";
 
 const initialState: TipologicheState = {
     codice: "",
     descrizione: "",
     tipologicaProdMiscelatiList: [],
-    tipologicaRuoli: []
+    tipologicaRuoli: [],
+    tipologicaCitta: [],
+    tipologicaImmobile: [],
+    tipologicaAnnuncio: []
 }
 
 const tipologicheSlice = createSlice({
@@ -41,6 +37,24 @@ const tipologicheSlice = createSlice({
             state.tipologicaRuoli = action.payload
             return state
         },
+        setTipologicaCitta: (
+            state: TipologicheState,
+            action: PayloadAction<Tipologica<any>[]>
+        ) => {
+            state.tipologicaCitta = action.payload
+        },
+        setTipologicaImmobile: (
+            state: TipologicheState,
+            action: PayloadAction<Tipologica<any>[]>
+        ) => {
+            state.tipologicaImmobile = action.payload
+        },
+        setTipologicaAnnuncio: (
+            state: TipologicheState,
+            action: PayloadAction<Tipologica<any>[]>
+        ) => {
+            state.tipologicaAnnuncio = action.payload
+        },
         resetTipologica: (state: TipologicheState) => {
             return initialState
         }
@@ -52,6 +66,9 @@ export const {
     setTipologica,
     setListaTipologicheProdMiscelati,
     setTipologicaRuoli,
+    setTipologicaCitta,
+    setTipologicaImmobile,
+    setTipologicaAnnuncio,
     resetTipologica
 } = actions
 export default tipologicheSlice.reducer

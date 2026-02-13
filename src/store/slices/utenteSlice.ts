@@ -1,6 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {UtenteResponse} from "@/utils/types";
-import {utenteApi} from "@/api/utenteApi"
+import {LoginResponse, UtenteResponse} from "@/utils/types";
 
 const initialUtenteState: UtenteResponse = {
     cognome: "",
@@ -11,9 +10,17 @@ const initialUtenteState: UtenteResponse = {
     telefono: ""
 }
 
+const initialLoginState: LoginResponse = {
+    id: "",
+    nome: "",
+    cognome: "",
+    email: "",
+    ruolo: ""
+}
+
 const utenteSlice = createSlice({
     name: "utente",
-    initialState: initialUtenteState,
+    initialState: initialLoginState,
     reducers: {
         setLoginUtente: (state, {payload}) => {
             return payload
@@ -22,23 +29,6 @@ const utenteSlice = createSlice({
             return payload
         }
     },
-    extraReducers: (builder) => {
-        builder.addMatcher(
-            utenteApi.endpoints.loginUser.matchFulfilled,
-            (state, {payload}) => {
-                state.ruoloId = Number(payload.ruolo)
-
-            }
-        )
-        builder.addMatcher(
-            utenteApi.endpoints.logoutUser.matchFulfilled,
-            () => initialUtenteState
-        )
-        builder.addMatcher(
-            utenteApi.endpoints.registrazioneUser.matchFulfilled,
-            () => initialUtenteState
-        )
-    }
 })
 
 export const {actions, reducer} = utenteSlice

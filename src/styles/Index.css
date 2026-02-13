@@ -1,0 +1,7 @@
+:root {
+    --app-font: 'JetBrains Mono', monospace;
+}
+
+body {
+    font-family: var(--app-font);
+}

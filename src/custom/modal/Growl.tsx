@@ -1,5 +1,5 @@
 import Toast from "react-bootstrap/Toast"
-import { useDispatch, useSelector } from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {setGrowl} from "@/store/slices/uiSlice";
 import type {AppState} from "@/store/store";
 
@@ -8,12 +8,12 @@ const Growl = () => {
     const growl = useSelector((state: AppState) => state.ui.growl)
 
     const hideGrowl = () => {
-        dispatch(setGrowl({ show: false }))
+        dispatch(setGrowl({show: false}))
     }
 
     return (
         <Toast
-            className={"shadow-lg " + (growl.style ? " border bg-white " + growl.style : "")}
+            className={"shadow-lg custom-toast " + (growl.style ? " border bg-white " + growl.style : "")}
             style={{
                 position: "fixed",
                 top: 60,
@@ -26,8 +26,11 @@ const Growl = () => {
             delay={5000}
             autohide
         >
-            <Toast.Header className={"border-bottom py-2 bg-opacity-10 bg-muted"}>
-                <i className={"ps-0 ms-0 "+(growl.style || "") + growl.icon} />
+            <Toast.Header
+                className={"border-bottom py-2 bg-opacity-10 bg-muted"}
+                closeButton={false}>
+
+                <i className={"ps-0 ms-0 " + (growl.style || "") + growl.icon}/>
                 <strong className=" me-auto">{growl.header || ""}</strong>
             </Toast.Header>
             <Toast.Body className={"py-2"}>{growl.body || ""}</Toast.Body>

@@ -36,7 +36,7 @@ export const successMiddleware =
 export const rootApi = createApi({
     reducerPath: "privato",
     baseQuery: fetchBaseQuery({baseUrl: ROOT_API_PRIVATE}),
-    tagTypes: ["User", "Tipologiche", "Miscelazione"],
+    tagTypes: ["User", "Tipologiche", "Miscelazione", "Annuncio"],
     keepUnusedDataFor: 0,
     endpoints: () => ({})
 })

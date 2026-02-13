@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
 import {Annuncio} from "@/utils/types";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export const initialStateAnnuncio: Annuncio = {
     cittaId: 0,
@@ -11,6 +11,7 @@ export const initialStateAnnuncio: Annuncio = {
     esisteTerrazzo: "",
     id: 0,
     mq: 0,
+    numeroStanze: 0,
     numeroVisualizzazioni: 0,
     piano: 0,
     prezzo: 0,
@@ -22,3 +23,25 @@ export const initialStateAnnuncio: Annuncio = {
     utenteId: 0,
     zona: ""
 }
+
+const annuncioSlice = createSlice({
+    name: "annuncio",
+    initialState: initialStateAnnuncio,
+    reducers: {
+        setAnnuncio: (
+            state,
+            action: PayloadAction<Annuncio>) => {
+            return action.payload
+        },
+        resetAnnuncio: (state) => {
+            return initialStateAnnuncio
+        }
+    }
+})
+
+
+const {actions, reducer} = annuncioSlice
+export const {
+    setAnnuncio
+} = actions
+export default annuncioSlice.reducer

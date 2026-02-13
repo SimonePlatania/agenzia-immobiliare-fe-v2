@@ -22,6 +22,7 @@ export interface Annuncio {
     prezzo: number
     zona: string
     mq: number
+    numeroStanze: number
     piano: number
     esisteAscensore?: string
     esisteGarage?: string
@@ -133,6 +134,16 @@ export interface RispostaDTO {
 export type OptionList =
     | Tipologica<any>
     | string
+
+export interface TipologicheState {
+    codice: string
+    descrizione: string
+    tipologicaProdMiscelatiList: Array<Tipologica<string>>
+    tipologicaRuoli: Array<Tipologica<string>>
+    tipologicaCitta: Array<Tipologica<string>>
+    tipologicaImmobile: Array<Tipologica<string>>
+    tipologicaAnnuncio: Array<Tipologica<string>>
+}
 
 export interface CustomInputProps {
     field: string

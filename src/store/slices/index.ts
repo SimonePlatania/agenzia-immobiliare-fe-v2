@@ -1,10 +1,12 @@
-import { combineReducers } from "redux"
+import {combineReducers} from "redux"
 import {rootApi} from "@/api/rootApi";
 import uiSlice from "@/store/slices/uiSlice";
 import messagesSlice from "@/store/slices/messagesSlice";
 import breadCrumbSlice from "@/store/slices/breadCrumb-slice";
 import breadCrumbSliceSaved from "@/store/slices/breadCrumb-slice-saved";
 import tipologicheSlice from "@/store/slices/tipologicheSlice";
+import utenteSlice from "@/store/slices/utenteSlice";
+import annuncioSlice from "@/store/slices/annuncioSlice";
 
 const createRootReducer = () =>
     combineReducers({
@@ -14,6 +16,8 @@ const createRootReducer = () =>
         breadcrumb: breadCrumbSlice,
         breadcrumbSaved: breadCrumbSliceSaved,
         tipologica: tipologicheSlice,
+        utente: utenteSlice,
+        annuncio: annuncioSlice
     })
 
 export default createRootReducer

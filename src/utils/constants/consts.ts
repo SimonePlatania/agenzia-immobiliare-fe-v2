@@ -1,4 +1,4 @@
-export const TITLE_APP = "Comunicazioni preventive di miscelazione"
+export const TITLE_APP = "Agenzia immobiliare"
 export const APP_NAME = "Miscelazione"
 export const DICHIARAZIONE_ACCESSIBILITA = "Dichiarazione di accessibilità"
 export const AGENZIA_DOGANE = "Agenzia delle dogane e dei Monopoli"
@@ -8,7 +8,7 @@ export const DOUBLE_REGEX = /^(\d+(\.\d+)?|)$/
 
 export enum Session {
     TOTAL_SESSION_TIME = 30 * 60,
-    SHOW_SESSION_MESSAGE_TIME =5 * 60
+    SHOW_SESSION_MESSAGE_TIME = 5 * 60
 }
 
 export enum Constants {
