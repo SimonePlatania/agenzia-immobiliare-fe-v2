@@ -6,6 +6,7 @@ import {AppPaths} from "@/utils/constants/routes";
 import Login from "@/components/pages/Login";
 import Registrazione from "@/components/pages/Registrazione";
 import CreazioneAnnuncio from "@/components/pages/CreazioneAnnuncio";
+import RicercaAnnuncio from "@/components/pages/RicercaAnnuncio";
 
 const MainRouter = () => {
     const {pathname} = useLocation();
@@ -23,6 +24,7 @@ const MainRouter = () => {
                     path={AppPaths.REDIRECT}
                     element={<Navigate replace to={AppPaths.REGISTER}/>}
                 />
+                <Route path={AppPaths.RICERCA_MODIFICA} element={<RicercaAnnuncio/>}/>
                 <Route path={AppPaths.LOGIN} element={<Login/>}/>
                 <Route path={AppPaths.REGISTER} element={<Registrazione/>}/>
                 <Route path={AppPaths.CREA_ANNUNCIO} element={<CreazioneAnnuncio/>}/>

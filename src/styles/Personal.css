@@ -44,6 +44,8 @@ input[type="password"],
 input[type="email"],
 input[type="number"],
 input[type="file"],
+input[type="date"],
+textarea,
 select {
     width: 100%;
     padding: 0.6rem 0.8rem;

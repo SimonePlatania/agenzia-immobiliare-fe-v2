@@ -11,10 +11,10 @@ const Navbar = () => {
                 <BsNavbar.Toggle/>
                 <BsNavbar.Collapse>
                     <Nav>
-                        <Nav.Link as={Link} to="/login" active={pathname === AppPaths.REGISTER}>
+                        <Nav.Link as={Link} to="/crea-annuncio" active={pathname === AppPaths.CREA_ANNUNCIO}>
                             Crea annuncio
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/prodotti" active={pathname === AppPaths.LOGIN}>
+                        <Nav.Link as={Link} to="/ricerca-modifica" active={pathname === AppPaths.RICERCA_MODIFICA}>
                             Ricerca
                         </Nav.Link>
                     </Nav>

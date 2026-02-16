@@ -1,39 +1,34 @@
-import {useForm, UseFormProps, UseFormReturn} from "react-hook-form";
-import {Annuncio} from "@/utils/types";
-import {useState} from "react";
-import {
-    useGetCittaQuery,
-    useGetRuoliQuery,
-    useGetTipoAnnunciQuery,
-    useGetTipoImmobiliQuery
-} from "@/api/tipologicheApi";
-import {useCreaAnnuncioMutation} from "@/api/annuncioApi";
-import {Col, Row} from "react-bootstrap";
-import CustomInput from "@/custom/utils/CustomInput";
-import {InputTypes} from "@/utils/constants/consts";
-import {initialStateAnnuncio} from "@/store/slices/annuncioSlice";
+import {useForm, UseFormProps} from "react-hook-form";
+import {RicercaRequest} from "@/utils/types";
+import {useGetCittaQuery, useGetTipoAnnunciQuery, useGetTipoImmobiliQuery} from "@/api/tipologicheApi";
 import {useDispatch} from "react-redux";
 import {setGrowl} from "@/store/slices/uiSlice";
 import {createErrorGrowl} from "@/custom/modal/Growl";
+import {Col, Row} from "react-bootstrap";
+import CustomInput from "@/custom/utils/CustomInput";
+import {InputTypes} from "@/utils/constants/consts";
 import {STATI} from "@/utils/utils";
+import {useRicercaAnnuncioMutation} from "@/api/annuncioApi";
+import {initialStateRicerca} from "@/store/slices/ricercaAnnuncioSlice";
 
-const formConfig: UseFormProps<Annuncio> = {
+const formConfig: UseFormProps<RicercaRequest> = {
     defaultValues: {
-        titolo: "",
-        descrizione: "",
-        cittaId: 0,
-        utenteId: 0,
-        tipologiaImmobileId: 0,
-        tipologiaAnnuncioId: 0,
+        tipologiaAnnuncioId: "",
+        tipologiaImmobileId: "",
+        prezzoDa: 0,
+        prezzoAl: 0,
+        dataDal: "",
+        dataAl: "",
+        mqMinimi: 0,
+        stanzeMinime: 0,
+        citta: "",
+        ascensore: 0,
+        garage: 0,
+        terrazzo: 0,
+        postoAuto: 0,
         zona: "",
-        mq: 0,
         speseAggiuntive: 0,
-        prezzo: 0,
-        piano: 0,
-        esisteAscensore: "",
-        esisteGarage: "",
-        esistePostoAutoAssegnato: "",
-        esisteTerrazzo: ""
+        titolo: ""
     },
     resetOptions: {
         keepDirtyValues: true,
@@ -41,41 +36,40 @@ const formConfig: UseFormProps<Annuncio> = {
     }
 };
 
-
-const CreazioneAnnuncio = () => {
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
-    const [creaAnnuncio, {isLoading, error}] = useCreaAnnuncioMutation();
+export const RicercaAnnuncio = () => {
     const {data: tipologieAnnunci, isLoading: tipologieAnnunciLoading} = useGetTipoAnnunciQuery()
     const {data: tipologieImmobili, isLoading: tipologieImmobiliLoading} = useGetTipoImmobiliQuery()
     const {data: getCitta, isLoading: getCittaLoading} = useGetCittaQuery()
-    const {data: ruoli, isLoading: ruoliLoading} = useGetRuoliQuery()
+    const [ricerca, {isLoading, error}] = useRicercaAnnuncioMutation()
 
-
-    const form: UseFormReturn<any> = useForm<Annuncio>(formConfig);
+    const form = useForm<RicercaRequest>(formConfig);
     const dispatch = useDispatch();
 
-    const handleAnnuncio = async () => {
+    const handleReset = () => {
+        form.reset(initialStateRicerca)
+    }
+
+    const handleRicercaAnnunci = async () => {
         try {
-            await creaAnnuncio(form.watch()).unwrap();
+            await ricerca({
+                filtri: form.watch(),
+                page: 0,
+                pageSize: 100,
+            }).unwrap();
         } catch (err: any) {
             const messaggio = err?.data?.messaggio || "Errore generico"
             dispatch(setGrowl(createErrorGrowl(messaggio)))
         }
     }
 
-    const handleReset = () => {
-        form.reset(initialStateAnnuncio)
-    }
-
     return (
-        <form onSubmit={form.handleSubmit(handleAnnuncio)}>
+        <form onSubmit={form.handleSubmit(handleRicercaAnnunci)}>
             <fieldset className="fieldset-bordered fieldset-main mt-5">
-                <legend>Creazione annuncio</legend>
-
+                <legend>Ricerca annunci</legend>
                 <fieldset className="fieldset-bordered mt-1">
-                    <legend>Presentazione annuncio</legend>
+                    <legend>Specifiche</legend>
                     <Row>
-                        <Col sm={12} md={6}>
+                        <Col sm={12} md={8}>
                             <CustomInput
                                 field="titolo"
                                 descr="Titolo"
@@ -84,33 +78,9 @@ const CreazioneAnnuncio = () => {
                                 form={form}
                             />
                         </Col>
-
-                        <Col sm={12} md={6}>
+                        <Col sm={12} md={4}>
                             <CustomInput
-                                field="descrizione"
-                                descr="Foto immobile"
-                                placeholder="Inserisci la descrizione dell'annuncio"
-                                type={InputTypes.FILE}
-                                form={form}
-                            />
-                        </Col>
-                        <Col sm={12} md={12}>
-                            <CustomInput
-                                field="descrizione"
-                                descr="Descrizione"
-                                placeholder="Inserisci la descrizione dell'annuncio"
-                                type={InputTypes.TEXTAREA}
-                                form={form}
-                            />
-                        </Col>
-                    </Row>
-                </fieldset>
-                <fieldset className="fieldset-bordered mt-4">
-                    <legend>Classificazione e posizione</legend>
-                    <Row>
-                        <Col sm={12} md={6}>
-                            <CustomInput
-                                field="cittaId"
+                                field="citta"
                                 descr="Città"
                                 type={InputTypes.SELECT}
                                 form={form}
@@ -118,87 +88,126 @@ const CreazioneAnnuncio = () => {
                                 isLoading={getCittaLoading}
                             />
                         </Col>
-                        <Col sm={12} md={6}>
-                            <CustomInput
-                                field="utenteId"
-                                descr="Utente"
-                                type={InputTypes.SELECT}
-                                form={form}
-                                options={getCitta ?? []}
-                                isLoading={getCittaLoading}
-                            />
-                        </Col>
+                    </Row>
+                </fieldset>
+                <fieldset className={"fieldset-bordered mt-4"}>
+                    <legend>Tipologia</legend>
+                    <Row>
                         <Col sm={12} md={6}>
                             <CustomInput
                                 field="tipologiaImmobileId"
-                                descr="Tipo di immobile"
+                                descr="Tipologia immobile"
                                 type={InputTypes.SELECT}
-                                form={form}
                                 options={tipologieImmobili ?? []}
                                 isLoading={tipologieImmobiliLoading}
+                                form={form}
                             />
                         </Col>
                         <Col sm={12} md={6}>
                             <CustomInput
                                 field="tipologiaAnnuncioId"
-                                descr="Tipo di annuncio"
+                                descr="Tipologia annuncio"
                                 type={InputTypes.SELECT}
-                                form={form}
                                 options={tipologieAnnunci ?? []}
                                 isLoading={tipologieAnnunciLoading}
+                                form={form}
                             />
                         </Col>
                     </Row>
                 </fieldset>
-
+                <fieldset className={"fieldset-bordered mt-4"}>
+                    <legend>Prezzo</legend>
+                    <Row>
+                        <Col sm={12} md={6}>
+                            <CustomInput
+                                field="prezzoDa"
+                                descr="Prezzo (Da)"
+                                placeholder="Inserisci il titolo dell'annuncio"
+                                type={InputTypes.NUMBER}
+                                form={form}
+                            />
+                        </Col>
+                        <Col sm={12} md={6}>
+                            <CustomInput
+                                field="prezzoAl"
+                                descr="Prezzo (Al)"
+                                placeholder="Inserisci il titolo dell'annuncio"
+                                type={InputTypes.NUMBER}
+                                form={form}
+                            />
+                        </Col>
+                    </Row>
+                </fieldset>
+                <fieldset className={"fieldset-bordered mt-4"}>
+                    <legend>Data pubblicazione</legend>
+                    <Row>
+                        <Col sm={12} md={6}>
+                            <CustomInput
+                                field="dataDal"
+                                descr="Data di pubblicazione (Dal)"
+                                placeholder="Inserisci il titolo dell'annuncio"
+                                type={InputTypes.DATE}
+                                form={form}
+                            />
+                        </Col>
+                        <Col sm={12} md={6}>
+                            <CustomInput
+                                field="dataAl"
+                                descr="Data di pubblicazione (Al)"
+                                placeholder="Inserisci il titolo dell'annuncio"
+                                type={InputTypes.DATE}
+                                form={form}
+                            />
+                        </Col>
+                    </Row>
+                </fieldset>
                 <fieldset className={"fieldset-bordered mt-4"}>
                     <legend>Caratteristiche tecniche</legend>
                     <Row>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={9}>
                             <CustomInput
                                 field="zona"
                                 descr="Zona"
-                                placeholder="Inserisci la zona"
+                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.TEXT}
                                 form={form}
                             />
                         </Col>
                         <Col sm={12} md={3}>
                             <CustomInput
-                                field="mq"
-                                descr="MQ"
-                                placeholder={"Inserisci la superficie in mq"}
+                                field="mqMinimi"
+                                descr="MQ minimi"
+                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
                         </Col>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={6}>
                             <CustomInput
-                                field="numeroStanze"
-                                descr="Numero stanze"
-                                placeholder="Inserisci il numero di stanze"
+                                field="stanzeMinime"
+                                descr="Stanze minime"
+                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
                         </Col>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={6}>
                             <CustomInput
-                                field="piano"
-                                descr="Piano"
-                                placeholder="Inserisci il piano dell'immobile"
+                                field="speseAggiuntive"
+                                descr="Spese"
+                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
                         </Col>
                     </Row>
                 </fieldset>
-
                 <fieldset className={"fieldset-bordered mt-4"}>
                     <legend>Servizi e dotazioni</legend>
                     <Row>
                         <Col sm={12} md={6}>
                             <CustomInput
-                                field="esisteAscensore"
+                                field="ascensore"
                                 descr="Ascensore"
                                 type={InputTypes.SELECT}
                                 options={STATI}
@@ -207,7 +216,7 @@ const CreazioneAnnuncio = () => {
                         </Col>
                         <Col sm={12} md={6}>
                             <CustomInput
-                                field="esisteGarage"
+                                field="garage"
                                 descr="Garage"
                                 type={InputTypes.SELECT}
                                 options={STATI}
@@ -216,8 +225,8 @@ const CreazioneAnnuncio = () => {
                         </Col>
                         <Col sm={12} md={6}>
                             <CustomInput
-                                field="esistePostoAutoAssegnato"
-                                descr="Posto auto assegnato"
+                                field="terrazzo"
+                                descr="Terrazzo"
                                 type={InputTypes.SELECT}
                                 options={STATI}
                                 form={form}
@@ -225,8 +234,8 @@ const CreazioneAnnuncio = () => {
                         </Col>
                         <Col sm={12} md={6}>
                             <CustomInput
-                                field="esisteTerrazzo"
-                                descr="Terrazzo"
+                                field="postoAuto"
+                                descr="Posto auto"
                                 type={InputTypes.SELECT}
                                 options={STATI}
                                 form={form}
@@ -242,7 +251,7 @@ const CreazioneAnnuncio = () => {
                             type="submit"
                             disabled={isLoading}
                         >
-                            {isLoading ? "Creazione..." : "CREA ANNUNCIO"}
+                            {isLoading ? "Creazione..." : "RICERCA ANNUNCIO"}
                         </button>
                         <button
                             className="btn btn-primary px-4 order-2"
@@ -258,4 +267,4 @@ const CreazioneAnnuncio = () => {
     )
 }
 
-export default CreazioneAnnuncio
+export default RicercaAnnuncio

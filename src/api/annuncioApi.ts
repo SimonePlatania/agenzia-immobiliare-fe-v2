@@ -1,6 +1,6 @@
 import {rootApi} from "@/api/rootApi";
-import {Annuncio} from "@/utils/types";
-import {AnnuncioRest} from "@/utils/constants/endpoints";
+import {Annuncio, RicercaRequest, RicercaResponse} from "@/utils/types";
+import {AnnuncioRest, RicercaRest} from "@/utils/constants/endpoints";
 
 export const annuncioApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
@@ -12,9 +12,26 @@ export const annuncioApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Annuncio"]
         }),
+        ricercaAnnuncio: build.mutation<RicercaResponse, {
+            filtri: RicercaRequest;
+            page?: number;
+            pageSize?: number;
+        }>({
+            query: ({filtri, page, pageSize}) => ({
+                url: `${RicercaRest.RICERCA}`,
+                method: "POST",
+                body: filtri,
+                params: {
+                    ...(page !== undefined && {page}),
+                    ...(pageSize !== undefined && {pageSize})
+                }
+            }),
+            invalidatesTags: ["Annuncio"]
+        })
     })
 })
 
 export const {
-    useCreaAnnuncioMutation
+    useCreaAnnuncioMutation,
+    useRicercaAnnuncioMutation
 } = annuncioApi

@@ -7,6 +7,7 @@ import breadCrumbSliceSaved from "@/store/slices/breadCrumb-slice-saved";
 import tipologicheSlice from "@/store/slices/tipologicheSlice";
 import utenteSlice from "@/store/slices/utenteSlice";
 import annuncioSlice from "@/store/slices/annuncioSlice";
+import sectionSlice from "@/store/slices/sectionSlice";
 
 const createRootReducer = () =>
     combineReducers({
@@ -17,7 +18,9 @@ const createRootReducer = () =>
         breadcrumbSaved: breadCrumbSliceSaved,
         tipologica: tipologicheSlice,
         utente: utenteSlice,
-        annuncio: annuncioSlice
+        section: sectionSlice,
+        annuncio: annuncioSlice,
+        ricerca: annuncioSlice
     })
 
 export default createRootReducer
