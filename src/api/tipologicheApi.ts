@@ -64,6 +64,21 @@ export const tipologicheApi = rootApi.injectEndpoints({
             },
             providesTags: ["Tipologiche"]
         }),
+        getClienti: build.query<Array<Tipologica<string>>, void>({
+            query: () => ({
+                url: `${TipologicaRest.TIPOLOGICA}${TipologicaRest.GET_CLIENTI}`,
+                method: "GET"
+            }),
+            transformResponse: (
+                response: Array<{ codice: string; descrizione: string }>
+            ) => {
+                return response.map((ruolo) => ({
+                    key: ruolo.codice,
+                    value: ruolo.descrizione
+                }))
+            },
+            providesTags: ["Tipologiche"]
+        }),
     })
 })
 
@@ -71,5 +86,6 @@ export const {
     useGetRuoliQuery,
     useGetCittaQuery,
     useGetTipoAnnunciQuery,
-    useGetTipoImmobiliQuery
+    useGetTipoImmobiliQuery,
+    useGetClientiQuery,
 } = tipologicheApi

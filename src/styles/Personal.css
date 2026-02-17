@@ -101,7 +101,7 @@ button[type="button"]:not(.password-toggle),
     margin: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #1a1a1a;
+    background-color: #212529;
     color: #ffffff;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.9rem;

@@ -143,6 +143,7 @@ export interface TipologicheState {
     tipologicaCitta: Array<Tipologica<string>>
     tipologicaImmobile: Array<Tipologica<string>>
     tipologicaAnnuncio: Array<Tipologica<string>>
+    tipologicaClienti: Array<Tipologica<string>>
 }
 
 export interface CustomInputProps {

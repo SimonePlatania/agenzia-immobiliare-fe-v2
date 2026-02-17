@@ -8,7 +8,8 @@ const initialState: TipologicheState = {
     tipologicaRuoli: [],
     tipologicaCitta: [],
     tipologicaImmobile: [],
-    tipologicaAnnuncio: []
+    tipologicaAnnuncio: [],
+    tipologicaClienti: [],
 }
 
 const tipologicheSlice = createSlice({
@@ -54,6 +55,12 @@ const tipologicheSlice = createSlice({
             action: PayloadAction<Tipologica<any>[]>
         ) => {
             state.tipologicaAnnuncio = action.payload
+        },
+        setTipologicaClienti: (
+            state: TipologicheState,
+            action: PayloadAction<Tipologica<any>[]>
+        ) => {
+            state.tipologicaClienti = action.payload
         },
         resetTipologica: (state: TipologicheState) => {
             return initialState

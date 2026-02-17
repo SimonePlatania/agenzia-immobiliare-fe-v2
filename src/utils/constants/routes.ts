@@ -5,7 +5,7 @@ export enum AppPaths {
     CODICE_DITTA = "/codiceDitta",
     MENU = "menu",
     HOME = "/home",
-    RICERCA_MODIFICA = "ricerca-modifica",
+    RICERCA_MODIFICA = "/ricerca-modifica",
     NUOVA_COMUNICAZIONE_PREVENTIVA = "nuova-comunicazione-preventiva",
     COMUNICAZIONE_PREVENTIVA_DETAIL = "comunicazione-preventiva",
     COMUNICAZIONE_PREVENTIVA_ANNULLATA_DETAIL = "comunicazione-preventiva-annullata",

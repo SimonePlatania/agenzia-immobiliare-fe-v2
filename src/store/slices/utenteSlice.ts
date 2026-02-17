@@ -25,6 +25,9 @@ const utenteSlice = createSlice({
         setLoginUtente: (state, {payload}) => {
             return payload
         },
+        setLogoutUtente: (state) => {
+            return initialLoginState
+        },
         setRegistraUtente: (state, {payload}) => {
             return payload
         }
@@ -32,5 +35,5 @@ const utenteSlice = createSlice({
 })
 
 export const {actions, reducer} = utenteSlice
-export const {setLoginUtente, setRegistraUtente} = actions
+export const {setLoginUtente, setRegistraUtente, setLogoutUtente} = actions
 export default utenteSlice.reducer

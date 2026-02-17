@@ -7,6 +7,8 @@ import Login from "@/components/pages/Login";
 import Registrazione from "@/components/pages/Registrazione";
 import CreazioneAnnuncio from "@/components/pages/CreazioneAnnuncio";
 import RicercaAnnuncio from "@/components/pages/RicercaAnnuncio";
+import ProtectedRoute from "@/custom/utils/ProtectedRoute";
+import {Ruolo} from "@/utils/constants/consts";
 
 const MainRouter = () => {
     const {pathname} = useLocation();
@@ -26,8 +28,21 @@ const MainRouter = () => {
                 />
                 <Route path={AppPaths.RICERCA_MODIFICA} element={<RicercaAnnuncio/>}/>
                 <Route path={AppPaths.LOGIN} element={<Login/>}/>
-                <Route path={AppPaths.REGISTER} element={<Registrazione/>}/>
-                <Route path={AppPaths.CREA_ANNUNCIO} element={<CreazioneAnnuncio/>}/>
+                <Route path={AppPaths.REGISTER}
+                       element={
+                           <ProtectedRoute ruoliAutorizzati={[Ruolo.AMMINISTRATORE, Ruolo.UTENTE]}>
+                               <Registrazione/>
+                           </ProtectedRoute>
+                       }
+                />
+                <Route
+                    path={AppPaths.CREA_ANNUNCIO}
+                    element={
+                        <ProtectedRoute ruoliAutorizzati={[Ruolo.AMMINISTRATORE]}>
+                            <CreazioneAnnuncio/>
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </div>
     )

@@ -80,7 +80,8 @@ export enum Sections {
     ANNULLAMENTO = "annullamento"
 }
 
-export enum DLR {
-    COMPILATORE = "compilatore",
-    SOTTOSCRITTORE = "sottoscrittore"
+export enum Ruolo {
+    AMMINISTRATORE = "AMMINISTRATORE",
+    UTENTE = "UTENTE",
+    CLIENTE = "CLIENTE"
 }

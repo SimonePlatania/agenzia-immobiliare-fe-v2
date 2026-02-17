@@ -122,7 +122,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="prezzoDa"
                                 descr="Prezzo (Da)"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
@@ -131,7 +130,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="prezzoAl"
                                 descr="Prezzo (Al)"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
@@ -145,7 +143,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="dataDal"
                                 descr="Data di pubblicazione (Dal)"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.DATE}
                                 form={form}
                             />
@@ -154,7 +151,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="dataAl"
                                 descr="Data di pubblicazione (Al)"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.DATE}
                                 form={form}
                             />
@@ -168,7 +164,7 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="zona"
                                 descr="Zona"
-                                placeholder="Inserisci il titolo dell'annuncio"
+                                placeholder="Inserisci la zona"
                                 type={InputTypes.TEXT}
                                 form={form}
                             />
@@ -177,7 +173,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="mqMinimi"
                                 descr="MQ minimi"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
@@ -186,7 +181,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="stanzeMinime"
                                 descr="Stanze minime"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
@@ -195,7 +189,6 @@ export const RicercaAnnuncio = () => {
                             <CustomInput
                                 field="speseAggiuntive"
                                 descr="Spese"
-                                placeholder="Inserisci il titolo dell'annuncio"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
@@ -251,14 +244,17 @@ export const RicercaAnnuncio = () => {
                             type="submit"
                             disabled={isLoading}
                         >
-                            {isLoading ? "Creazione..." : "RICERCA ANNUNCIO"}
+                            <i className="bi bi-search"></i>
+                            {isLoading ? " Creazione..." : " RICERCA ANNUNCIO"}
                         </button>
                         <button
                             className="btn btn-primary px-4 order-2"
+                            type="button"
                             onClick={handleReset}
                             disabled={isLoading}
                         >
-                            {isLoading ? "Pulizia..." : "RIPULISCI"}
+                            <i className="bi bi-eraser-fill me-2"></i>
+                            {isLoading ? "Pulizia..." : "PULISCI CAMPI"}
                         </button>
                     </Col>
                 </Row>

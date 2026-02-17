@@ -46,6 +46,7 @@ export const Registrazione = () => {
     return (
         <form
             onSubmit={form.handleSubmit(handleRegister)}
+            style={{marginTop: "50px", marginBottom: "50px", width: "50%", marginLeft: "25%"}}
         >
             <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Registrazione</legend>
@@ -90,15 +91,15 @@ export const Registrazione = () => {
                     form={form}
                 />
 
-                <CustomInput
-                    field="ruoloId"
-                    descr="Ruolo"
-                    placeholder="Inserisci il ruolo"
-                    type={InputTypes.SELECT}
-                    form={form}
-                    options={ruoli ?? []}
-                    isLoading={ruoliLoading}
-                />
+                {/*<CustomInput*/}
+                {/*    field="ruoloId"*/}
+                {/*    descr="Ruolo"*/}
+                {/*    placeholder="Inserisci il ruolo"*/}
+                {/*    type={InputTypes.SELECT}*/}
+                {/*    form={form}*/}
+                {/*    options={ruoli ?? []}*/}
+                {/*    isLoading={ruoliLoading}*/}
+                {/*/>*/}
 
                 <Row>
                     <Col sm={12} md={12}>
@@ -108,7 +109,8 @@ export const Registrazione = () => {
                             disabled={isLoading}
                             className="mt-3"
                         >
-                            {isLoading ? "Accesso..." : "REGISTRATI"}
+                            <i className="bi bi-sign-intersection-fill"></i>
+                            {isLoading ? " Accesso..." : " REGISTRATI"}
                         </Button>
                         <Button
                             variant="outline-dark"
@@ -116,7 +118,8 @@ export const Registrazione = () => {
                             onClick={() => navigate('/login')}
                             className="mt-3"
                         >
-                            {isLoading ? "Accesso..." : "LOGIN"}
+                            <i className="bi bi-door-open-fill"></i>
+                            {isLoading ? " Accesso..." : " LOGIN"}
                         </Button>
                     </Col>
                 </Row>

@@ -1,13 +1,16 @@
 import {Alert, Button} from "react-bootstrap";
 import {useLoginUserMutation} from "@/api/utenteApi";
 import CustomInput from "@/custom/utils/CustomInput";
-import {InputTypes} from "@/utils/constants/consts";
+import {InputTypes, Ruolo} from "@/utils/constants/consts";
 import {useForm, UseFormProps, UseFormReturn} from "react-hook-form";
 import {LoginRequest} from "@/utils/types";
 import {useState} from "react";
-import {createErrorGrowl, createSuccessGrowl} from "@/custom/modal/Growl";
+import {createErrorGrowl} from "@/custom/modal/Growl";
 import {setGrowl} from "@/store/slices/uiSlice";
 import {useDispatch} from "react-redux";
+import {setLoginUtente} from "@/store/slices/utenteSlice";
+import {useNavigate} from "react-router-dom";
+import {AppPaths} from "@/utils/constants/routes";
 
 const formConfig: UseFormProps<LoginRequest> = {
     defaultValues: {
@@ -20,33 +23,33 @@ const formConfig: UseFormProps<LoginRequest> = {
     }
 };
 
-export const handleLogin = async (
-    data,
-    setErrorMessage,
-    loginUser,
-    dispatch) => {
-    setErrorMessage(null)
-    try {
-        const result = await loginUser(data).unwrap();
-        dispatch(setGrowl(createSuccessGrowl(`Benvenuto ${result.nome || ''}!`)))
-    } catch (err: any) {
-        const messaggio = err?.data?.messaggio || "Errore generico"
-        setErrorMessage(messaggio)
-        dispatch(setGrowl(createErrorGrowl(messaggio)))
-    }
-}
 
 const Login = () => {
     const [loginUser, {isLoading, error}] = useLoginUserMutation();
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const form: UseFormReturn<any> = useForm<LoginRequest>(formConfig);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogin = async (data: LoginRequest) => {
+        try {
+            const userData = await loginUser(data).unwrap();
+            dispatch(setLoginUtente(userData));
+            if (userData.ruolo === Ruolo.AMMINISTRATORE) {
+                navigate(AppPaths.CREA_ANNUNCIO)
+            } else {
+                navigate(AppPaths.RICERCA_MODIFICA)
+            }
+        } catch (err: any) {
+            const messaggio = err?.data?.messaggio || "Errore generico"
+            dispatch(setGrowl(createErrorGrowl(messaggio)));
+        }
+    };
 
     return (
         <form
-            onSubmit={form.handleSubmit((values) =>
-                handleLogin(values, setErrorMessage, loginUser, dispatch)
-            )}
+            onSubmit={form.handleSubmit(handleLogin)}
+            style={{marginTop: "125px", marginBottom: "125px", width: "50%", marginLeft: "25%"}}
         >
             <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Login</legend>
@@ -73,7 +76,8 @@ const Login = () => {
                     disabled={isLoading}
                     style={{marginTop: "10px"}}
                 >
-                    {isLoading ? "Accesso..." : "ACCEDI"}
+                    <i className="bi bi-door-open-fill"></i>
+                    {isLoading ? " Accesso..." : " ACCEDI"}
                 </Button>
             </fieldset>
 

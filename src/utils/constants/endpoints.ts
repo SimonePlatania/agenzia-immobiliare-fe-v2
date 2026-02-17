@@ -13,7 +13,8 @@ export enum TipologicaRest {
     GET_CITTA = `/lista-citta`,
     GET_TIPO_IMMOBILI = `/lista-tipo-immobili`,
     GET_TIPO_ANNUNCI = `/lista-tipo-annunci`,
-    GET_TIPO_RUOLO = `/lista-tipo-ruoli`
+    GET_TIPO_RUOLO = `/lista-tipo-ruoli`,
+    GET_CLIENTI = '/lista-clienti'
 }
 
 export enum RicercaRest {

@@ -18,7 +18,7 @@ const BasicLayout = () => {
             {!isAuthPage && <Navbar/>}
 
             <Growl/>
-            <Container as="main" className="flex-grow-1 py-4">
+            <Container as="main" className="flex-grow-1 pt-2 pb-4">
                 <MainContent/>
             </Container>
 

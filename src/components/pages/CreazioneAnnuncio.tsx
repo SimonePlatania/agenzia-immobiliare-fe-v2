@@ -3,6 +3,7 @@ import {Annuncio} from "@/utils/types";
 import {useState} from "react";
 import {
     useGetCittaQuery,
+    useGetClientiQuery,
     useGetRuoliQuery,
     useGetTipoAnnunciQuery,
     useGetTipoImmobiliQuery
@@ -48,8 +49,8 @@ const CreazioneAnnuncio = () => {
     const {data: tipologieAnnunci, isLoading: tipologieAnnunciLoading} = useGetTipoAnnunciQuery()
     const {data: tipologieImmobili, isLoading: tipologieImmobiliLoading} = useGetTipoImmobiliQuery()
     const {data: getCitta, isLoading: getCittaLoading} = useGetCittaQuery()
+    const {data: getClienti, isLoading: getClientiLoading} = useGetClientiQuery()
     const {data: ruoli, isLoading: ruoliLoading} = useGetRuoliQuery()
-
 
     const form: UseFormReturn<any> = useForm<Annuncio>(formConfig);
     const dispatch = useDispatch();
@@ -68,7 +69,8 @@ const CreazioneAnnuncio = () => {
     }
 
     return (
-        <form onSubmit={form.handleSubmit(handleAnnuncio)}>
+        <form onSubmit={form.handleSubmit(handleAnnuncio)}
+        >
             <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Creazione annuncio</legend>
 
@@ -94,12 +96,20 @@ const CreazioneAnnuncio = () => {
                                 form={form}
                             />
                         </Col>
-                        <Col sm={12} md={12}>
+                        <Col sm={12} md={10}>
                             <CustomInput
                                 field="descrizione"
                                 descr="Descrizione"
                                 placeholder="Inserisci la descrizione dell'annuncio"
                                 type={InputTypes.TEXTAREA}
+                                form={form}
+                            />
+                        </Col>
+                        <Col sm={12} md={2}>
+                            <CustomInput
+                                field="prezzo"
+                                descr="Prezzo"
+                                type={InputTypes.NUMBER}
                                 form={form}
                             />
                         </Col>
@@ -124,8 +134,8 @@ const CreazioneAnnuncio = () => {
                                 descr="Utente"
                                 type={InputTypes.SELECT}
                                 form={form}
-                                options={getCitta ?? []}
-                                isLoading={getCittaLoading}
+                                options={getClienti ?? []}
+                                isLoading={getClientiLoading}
                             />
                         </Col>
                         <Col sm={12} md={6}>
@@ -242,14 +252,17 @@ const CreazioneAnnuncio = () => {
                             type="submit"
                             disabled={isLoading}
                         >
-                            {isLoading ? "Creazione..." : "CREA ANNUNCIO"}
+                            <i className="bi bi-plus-circle-dotted"></i>
+                            {isLoading ? " Creazione..." : " CREA ANNUNCIO"}
                         </button>
                         <button
                             className="btn btn-primary px-4 order-2"
+                            type="button"
                             onClick={handleReset}
                             disabled={isLoading}
                         >
-                            {isLoading ? "Pulizia..." : "RIPULISCI"}
+                            <i className="bi bi-eraser-fill me-2"></i>
+                            {isLoading ? "Pulizia..." : "PULISCI CAMPI"}
                         </button>
                     </Col>
                 </Row>
