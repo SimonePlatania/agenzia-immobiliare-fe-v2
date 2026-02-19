@@ -1,14 +1,14 @@
-import {useForm, UseFormProps, UseFormReturn} from "react-hook-form";
-import {UtenteRequest} from "@/utils/types";
-import {useRegistrazioneUserMutation} from "@/api/utenteApi";
-import {Button, Col, Row} from "react-bootstrap";
-import CustomInput from "@/custom/utils/CustomInput";
-import {InputTypes} from "@/utils/constants/consts";
-import {useGetRuoliQuery} from "@/api/tipologicheApi"
-import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {setGrowl} from "@/store/slices/uiSlice";
-import {createErrorGrowl} from "@/custom/modal/Growl";
+import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
+import { UtenteRequest } from "@/utils/types"
+import { useRegistrazioneUserMutation } from "@/api/utenteApi"
+import { Button, Col, Row } from "react-bootstrap"
+import CustomInput from "@/custom/utils/CustomInput"
+import { InputTypes } from "@/utils/constants/consts"
+import { useGetRuoliQuery } from "@/api/tipologicheApi"
+import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { setGrowl } from "@/store/slices/uiSlice"
+import { createErrorGrowl } from "@/custom/modal/Growl"
 
 const formConfig: UseFormProps<UtenteRequest> = {
     defaultValues: {
@@ -26,27 +26,32 @@ const formConfig: UseFormProps<UtenteRequest> = {
 }
 
 export const Registrazione = () => {
-    const [registrazioneUser, {isLoading, error}] =
+    const [registrazioneUser, { isLoading, error }] =
         useRegistrazioneUserMutation()
-    const {data: ruoli, isLoading: ruoliLoading} = useGetRuoliQuery()
-    const form: UseFormReturn<any> = useForm<UtenteRequest>(formConfig);
+    const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
+    const form: UseFormReturn<any> = useForm<UtenteRequest>(formConfig)
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleRegister = async () => {
         try {
-            await registrazioneUser(form.watch()).unwrap();
+            await registrazioneUser(form.watch()).unwrap()
         } catch (err: any) {
             const messaggio = err?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)));
+            dispatch(setGrowl(createErrorGrowl(messaggio)))
         }
-    };
+    }
 
     return (
         <form
             onSubmit={form.handleSubmit(handleRegister)}
-            style={{marginTop: "50px", marginBottom: "50px", width: "50%", marginLeft: "25%"}}
+            style={{
+                marginTop: "50px",
+                marginBottom: "50px",
+                width: "50%",
+                marginLeft: "25%"
+            }}
         >
             <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Registrazione</legend>
@@ -115,7 +120,7 @@ export const Registrazione = () => {
                         <Button
                             variant="outline-dark"
                             disabled={isLoading}
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate("/login")}
                             className="mt-3"
                         >
                             <i className="bi bi-door-open-fill"></i>

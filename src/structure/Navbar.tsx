@@ -7,8 +7,8 @@ import {Ruolo} from "@/utils/constants/consts";
 
 const Navbar = () => {
     const {pathname} = useLocation()
-    const ruolo = useSelector((state: AppState) => state.utente.ruolo)
-    const isAdmin = ruolo === Ruolo.AMMINISTRATORE
+    const {ruolo: ruoloUtente} = useSelector((state: AppState) => state.utente)
+    const isAdmin = ruoloUtente === Ruolo.AMMINISTRATORE
 
     return (
         <BsNavbar bg="dark" variant="dark" expand="lg">

@@ -1,11 +1,16 @@
-import type {ChangeEvent} from "react";
-import type {UseFormReturn} from "react-hook-form";
-import type {StatoSelectSearch} from "./constants/consts.ts";
+import type { ChangeEvent } from "react"
+import type { UseFormReturn } from "react-hook-form"
+import type { StatoSelectSearch } from "./constants/consts.ts"
 
 //TIPOLOGICA
 export interface Tipologica<T> {
     key: T | string
     value: string
+}
+
+export interface TipologicaDto<T> {
+    codice: T
+    descrizione: string
 }
 
 //ANNUNCIO
@@ -58,59 +63,60 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    id: string,
-    nome: string,
-    cognome: string,
-    email: string,
+    id: string
+    nome: string
+    cognome: string
+    email: string
     ruolo: string
 }
 
 //DOMANDA
 export interface DomandaRequest {
-    id: number,
-    dataDomanda: Date | string,
-    domanda: string,
-    annuncioId: number,
+    id: number
+    dataDomanda: Date | string
+    domanda: string
+    annuncioId: number
     utenteId: number
 }
 
 export interface DomandaResponse {
-    id: number,
-    dataDomanda: Date | string,
-    domanda: string,
-    annuncioId: number,
-    utenteId: number,
+    id: number
+    dataDomanda: Date | string
+    domanda: string
+    annuncioId: number
+    utenteId: number
     lettoDaUtente: string
 }
 
 //CAMBIO PASSWORD
 export interface PasswordChangeRequest {
-    vecchiaPassword: string,
+    vecchiaPassword: string
     nuovaPassword: string
 }
 
 //RICERCA
 export interface RicercaRequest {
-    tipologiaAnnuncioId?: string,
-    tipologiaImmobileId?: string,
-    prezzoDa?: number,
-    prezzoAl?: number,
-    dataDal?: Date | string,
-    dataAl?: Date | string,
-    mqMinimi?: number,
-    stanzeMinime?: number,
-    citta?: string,
-    ascensore?: number,
-    garage?: number,
-    terrazzo?: number,
-    postoAuto?: number,
-    zona?: string,
-    speseAggiuntive?: number,
+    tipologiaAnnuncioId?: string
+    tipologiaImmobileId?: string
+    prezzoDa?: string | number
+    prezzoAl?: string | number
+    dataDal?: Date | string
+    dataAl?: Date | string
+    mqMinimi?: string | number
+    stanzeMinime?: string | number
+    piano?: string | number
+    citta?: string
+    ascensore?: string | number
+    garage?: string | number
+    terrazzo?: string | number
+    postoAuto?: string | number
+    zona?: string
+    speseAggiuntive?: string | number
     titolo?: string
 }
 
 export interface RicercaResponse {
-    annunci: Array<Annuncio>,
+    annunci: Array<Annuncio>
     paginazione: Paginazione
 }
 
@@ -123,17 +129,15 @@ export interface Paginazione {
 }
 
 export interface RispostaDTO {
-    domandaId: number,
-    annuncioId: number,
-    utenteId: number,
-    risposta: string,
+    domandaId: number
+    annuncioId: number
+    utenteId: number
+    risposta: string
     lettoDaUtente: string
 }
 
 //UTILITIES
-export type OptionList =
-    | Tipologica<any>
-    | string
+export type OptionList = Tipologica<any> | TipologicaDto<any> | string
 
 export interface TipologicheState {
     codice: string

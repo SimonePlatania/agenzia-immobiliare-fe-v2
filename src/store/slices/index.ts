@@ -8,6 +8,8 @@ import tipologicheSlice from "@/store/slices/tipologicheSlice";
 import utenteSlice from "@/store/slices/utenteSlice";
 import annuncioSlice from "@/store/slices/annuncioSlice";
 import sectionSlice from "@/store/slices/sectionSlice";
+import listaAnnunciSlice from "@/store/slices/listaAnnunciSlice";
+import ricercaAnnuncioSlice from "@/store/slices/ricercaAnnuncioSlice";
 
 const createRootReducer = () =>
     combineReducers({
@@ -20,7 +22,8 @@ const createRootReducer = () =>
         utente: utenteSlice,
         section: sectionSlice,
         annuncio: annuncioSlice,
-        ricerca: annuncioSlice
+        ricerca: ricercaAnnuncioSlice,
+        listaAnnunci: listaAnnunciSlice
     })
 
 export default createRootReducer

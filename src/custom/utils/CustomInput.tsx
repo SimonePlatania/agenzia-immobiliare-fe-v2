@@ -1,11 +1,11 @@
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap"
 import { get } from "lodash"
 import { useDispatch } from "react-redux"
-import type {CustomInputProps, OptionList, Tipologica} from "@/utils/types";
-import {InputTypes, StatoSelectSearch} from "@/utils/constants/consts";
-import {type ChangeEvent, useState} from "react";
-import {handleFileSelect} from "@/utils/genericUtils";
-import CustomSelectSearch from "@/custom/utils/CustomSelectSearch";
+import type { CustomInputProps, OptionList, Tipologica } from "@/utils/types"
+import { InputTypes, StatoSelectSearch } from "@/utils/constants/consts"
+import { type ChangeEvent, useState } from "react"
+import { handleFileSelect } from "@/utils/genericUtils"
+import CustomSelectSearch from "@/custom/utils/CustomSelectSearch"
 
 const CustomInput = ({
     field,
@@ -75,9 +75,11 @@ const CustomInput = ({
     }
 
     const isInvalid = (): boolean => {
-        const isError = (!!get(form.formState.errors, formField) || false)
+        const isError = !!get(form.formState.errors, formField) || false
         // const isTouched = get(form.formState.touchedFields, formField, false)
-        return submitValidation ? isError &&  form.formState.isSubmitted : isError
+        return submitValidation
+            ? isError && form.formState.isSubmitted
+            : isError
     }
 
     const renderInput = (): React.JSX.Element => {
@@ -268,10 +270,9 @@ const CustomInput = ({
     }
 
     const [showPassword, setShowPassword] = useState(false)
-
     const renderInputPassword = (): React.JSX.Element => {
         return (
-            <div className="input-wrapper">
+            <div className="input-group">
                 <input
                     type={showPassword ? "text" : "password"}
                     id={field}
@@ -279,7 +280,10 @@ const CustomInput = ({
                         value
                             ? value
                             : formValue ??
-                            (readOnly ? "" : "")
+                              (readOnly
+                                  ? // "Non presente"
+                                    ""
+                                  : "")
                     }
                     name={field}
                     aria-label={ariaLabel ?? field}
@@ -293,8 +297,9 @@ const CustomInput = ({
                     }}
                     onFocus={async (e: any) => {
                         onFocusEvent ? onFocusEvent(e) : ""
+                        // await form.trigger(formField)
                     }}
-                    className={`form-control has-icon ${
+                    className={`form-control ${
                         isInvalid() ? "is-invalid" : ""
                     }`}
                     disabled={disabled ? disabled : false}
@@ -302,12 +307,15 @@ const CustomInput = ({
                     placeholder={placeholder ? placeholder : ""}
                     style={style}
                 />
-
                 <button
-                    className="password-toggle"
+                    className={`btn btn-outline-primary  ${
+                        isInvalid()
+                            ? "is-invalid passwordClassError"
+                            : "text-secondary passwordClass"
+                    }`}
+                    style={{ borderColor: "#ced4da" }}
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Nascondi password" : "Mostra password"}
                 >
                     <i
                         className={`bi ${
@@ -558,8 +566,8 @@ const CustomInput = ({
                             onChangeEvent
                                 ? onChangeEvent(e)
                                 : form.setValue(field, e.target.checked, {
-                                    shouldValidate: true
-                                })
+                                      shouldValidate: true
+                                  })
                         }
                         onBlur={async (e: any) => {
                             onBlurEvent ? onBlurEvent(e) : ""
@@ -570,7 +578,9 @@ const CustomInput = ({
                             await form.trigger(field)
                         }}
                     />
-                    <span className={"ms-2"} id={`${field}-label`}>{descr}</span>
+                    <span className={"ms-2"} id={`${field}-label`}>
+                        {descr}
+                    </span>
                 </Col>
             </Row>
         )

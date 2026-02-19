@@ -1,22 +1,24 @@
-import {useForm, UseFormProps, UseFormReturn} from "react-hook-form";
-import {Annuncio} from "@/utils/types";
-import {useState} from "react";
+import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
+import { Annuncio } from "@/utils/types"
+import { useState } from "react"
 import {
     useGetCittaQuery,
     useGetClientiQuery,
     useGetRuoliQuery,
     useGetTipoAnnunciQuery,
     useGetTipoImmobiliQuery
-} from "@/api/tipologicheApi";
-import {useCreaAnnuncioMutation} from "@/api/annuncioApi";
-import {Col, Row} from "react-bootstrap";
-import CustomInput from "@/custom/utils/CustomInput";
-import {InputTypes} from "@/utils/constants/consts";
-import {initialStateAnnuncio} from "@/store/slices/annuncioSlice";
-import {useDispatch} from "react-redux";
-import {setGrowl} from "@/store/slices/uiSlice";
-import {createErrorGrowl} from "@/custom/modal/Growl";
-import {STATI} from "@/utils/utils";
+} from "@/api/tipologicheApi"
+import { useCreaAnnuncioMutation } from "@/api/annuncioApi"
+import { Col, Row } from "react-bootstrap"
+import CustomInput from "@/custom/utils/CustomInput"
+import { InputTypes } from "@/utils/constants/consts"
+import { initialStateAnnuncio } from "@/store/slices/annuncioSlice"
+import { useDispatch } from "react-redux"
+import { setGrowl } from "@/store/slices/uiSlice"
+import { createErrorGrowl } from "@/custom/modal/Growl"
+import { STATI } from "@/utils/utils"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { annuncioSchema } from "@/components/yupSchemas/yupSchema"
 
 const formConfig: UseFormProps<Annuncio> = {
     defaultValues: {
@@ -28,6 +30,7 @@ const formConfig: UseFormProps<Annuncio> = {
         tipologiaAnnuncioId: 0,
         zona: "",
         mq: 0,
+        numeroStanze: 0,
         speseAggiuntive: 0,
         prezzo: 0,
         piano: 0,
@@ -39,25 +42,28 @@ const formConfig: UseFormProps<Annuncio> = {
     resetOptions: {
         keepDirtyValues: true,
         keepErrors: true
-    }
-};
-
+    },
+    resolver: yupResolver(annuncioSchema)
+}
 
 const CreazioneAnnuncio = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
-    const [creaAnnuncio, {isLoading, error}] = useCreaAnnuncioMutation();
-    const {data: tipologieAnnunci, isLoading: tipologieAnnunciLoading} = useGetTipoAnnunciQuery()
-    const {data: tipologieImmobili, isLoading: tipologieImmobiliLoading} = useGetTipoImmobiliQuery()
-    const {data: getCitta, isLoading: getCittaLoading} = useGetCittaQuery()
-    const {data: getClienti, isLoading: getClientiLoading} = useGetClientiQuery()
-    const {data: ruoli, isLoading: ruoliLoading} = useGetRuoliQuery()
+    const [creaAnnuncio, { isLoading, error }] = useCreaAnnuncioMutation()
+    const { data: tipologieAnnunci, isLoading: tipologieAnnunciLoading } =
+        useGetTipoAnnunciQuery()
+    const { data: tipologieImmobili, isLoading: tipologieImmobiliLoading } =
+        useGetTipoImmobiliQuery()
+    const { data: getCitta, isLoading: getCittaLoading } = useGetCittaQuery()
+    const { data: getClienti, isLoading: getClientiLoading } =
+        useGetClientiQuery()
+    const { data: getRuoli, isLoading: ruoliLoading } = useGetRuoliQuery()
 
-    const form: UseFormReturn<any> = useForm<Annuncio>(formConfig);
-    const dispatch = useDispatch();
+    const form: UseFormReturn<any> = useForm<Annuncio>(formConfig)
+    const dispatch = useDispatch()
 
     const handleAnnuncio = async () => {
         try {
-            await creaAnnuncio(form.watch()).unwrap();
+            await creaAnnuncio(form.watch()).unwrap()
         } catch (err: any) {
             const messaggio = err?.data?.messaggio || "Errore generico"
             dispatch(setGrowl(createErrorGrowl(messaggio)))
@@ -69,8 +75,7 @@ const CreazioneAnnuncio = () => {
     }
 
     return (
-        <form onSubmit={form.handleSubmit(handleAnnuncio)}
-        >
+        <form onSubmit={form.handleSubmit(handleAnnuncio)}>
             <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Creazione annuncio</legend>
 
@@ -164,7 +169,7 @@ const CreazioneAnnuncio = () => {
                 <fieldset className={"fieldset-bordered mt-4"}>
                     <legend>Caratteristiche tecniche</legend>
                     <Row>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={8}>
                             <CustomInput
                                 field="zona"
                                 descr="Zona"
@@ -173,29 +178,34 @@ const CreazioneAnnuncio = () => {
                                 form={form}
                             />
                         </Col>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={4}>
                             <CustomInput
                                 field="mq"
                                 descr="MQ"
-                                placeholder={"Inserisci la superficie in mq"}
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
                         </Col>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={4}>
                             <CustomInput
                                 field="numeroStanze"
                                 descr="Numero stanze"
-                                placeholder="Inserisci il numero di stanze"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
                         </Col>
-                        <Col sm={12} md={3}>
+                        <Col sm={12} md={4}>
                             <CustomInput
                                 field="piano"
                                 descr="Piano"
-                                placeholder="Inserisci il piano dell'immobile"
+                                type={InputTypes.NUMBER}
+                                form={form}
+                            />
+                        </Col>
+                        <Col sm={12} md={4}>
+                            <CustomInput
+                                field="speseAggiuntive"
+                                descr="Spese"
                                 type={InputTypes.NUMBER}
                                 form={form}
                             />
@@ -246,9 +256,13 @@ const CreazioneAnnuncio = () => {
                 </fieldset>
 
                 <Row>
-                    <Col sm={12} md={12} className="d-flex justify-content-center mt-4 mb-5">
+                    <Col
+                        sm={12}
+                        md={12}
+                        className="d-flex justify-content-center mt-4 mb-5"
+                    >
                         <button
-                            className="btn btn-primary px-4 order-1"
+                            className="btn btn-general btn-primary px-4 order-1"
                             type="submit"
                             disabled={isLoading}
                         >
@@ -256,7 +270,7 @@ const CreazioneAnnuncio = () => {
                             {isLoading ? " Creazione..." : " CREA ANNUNCIO"}
                         </button>
                         <button
-                            className="btn btn-primary px-4 order-2"
+                            className="btn-general btn btn-primary px-4 order-2"
                             type="button"
                             onClick={handleReset}
                             disabled={isLoading}

@@ -1,4 +1,4 @@
-import {Alert, Button} from "react-bootstrap";
+import {Alert, Button, Row} from "react-bootstrap";
 import {useLoginUserMutation} from "@/api/utenteApi";
 import CustomInput from "@/custom/utils/CustomInput";
 import {InputTypes, Ruolo} from "@/utils/constants/consts";
@@ -11,6 +11,8 @@ import {useDispatch} from "react-redux";
 import {setLoginUtente} from "@/store/slices/utenteSlice";
 import {useNavigate} from "react-router-dom";
 import {AppPaths} from "@/utils/constants/routes";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {loginSchema} from "@/components/yupSchemas/yupSchema";
 
 const formConfig: UseFormProps<LoginRequest> = {
     defaultValues: {
@@ -20,7 +22,8 @@ const formConfig: UseFormProps<LoginRequest> = {
     resetOptions: {
         keepDirtyValues: true,
         keepErrors: true
-    }
+    },
+    resolver: yupResolver(loginSchema)
 };
 
 
@@ -46,6 +49,7 @@ const Login = () => {
         }
     };
 
+
     return (
         <form
             onSubmit={form.handleSubmit(handleLogin)}
@@ -61,16 +65,20 @@ const Login = () => {
                     type={InputTypes.TEXT}
                     form={form}
                 />
+                <Row>
+                    <CustomInput
+                        field="password"
+                        descr="Password"
+                        classes={"col-12"}
+                        placeholder="Inserisci la tua password"
+                        type={InputTypes.PASSWORD}
+                        form={form}
+                    />
+                </Row>
 
-                <CustomInput
-                    field="password"
-                    descr="Password"
-                    placeholder="Inserisci la tua password"
-                    type={InputTypes.PASSWORD}
-                    form={form}
-                />
 
                 <Button
+                    className="btn btn-general"
                     variant="outline-dark"
                     type={"submit"}
                     disabled={isLoading}

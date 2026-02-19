@@ -1,6 +1,11 @@
-import type {ChangeEvent, Dispatch} from "react";
-import type {UseFormReturn} from "react-hook-form";
-import {addDangerMessage, addSuccessMessage, clearMessages} from "@/store/slices/messagesSlice";
+import type { ChangeEvent, Dispatch } from "react"
+import type { UseFormReturn } from "react-hook-form"
+import {
+    addDangerMessage,
+    addSuccessMessage,
+    clearMessages
+} from "@/store/slices/messagesSlice"
+import { Tipologica } from "@/utils/types"
 
 export const onFileSelected = (event: ChangeEvent<any>): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -67,19 +72,30 @@ export const handleFileSelect = (
                 form.setValue("nomeFile", r.nomeFile, {
                     shouldValidate: true
                 })
-                dispatch(addSuccessMessage({text: `Allegato caricato correttamente: ${r.nomeFile}`}))
+                dispatch(
+                    addSuccessMessage({
+                        text: `Allegato caricato correttamente: ${r.nomeFile}`
+                    })
+                )
                 scrollToTop()
             })
             .catch((err) => {
                 e.target.value = ""
                 // dispatch(setGrowl(createErrorGrowl(err.message)))
-                dispatch(addDangerMessage({text: err.message}))
+                dispatch(addDangerMessage({ text: err.message }))
                 scrollToTop()
-                form.setValue(e.target.id, "", {shouldValidate: true})
+                form.setValue(e.target.id, "", { shouldValidate: true })
                 form.setValue("nomeFile", "", {
                     shouldValidate: true
                 })
             })
         dispatch(clearMessages())
     }
+}
+
+export const findByTipologica = (
+    tipologica: Tipologica<number>[],
+    key: number
+) => {
+    return tipologica.find((t: Tipologica<number>) => t.key == key)?.value
 }

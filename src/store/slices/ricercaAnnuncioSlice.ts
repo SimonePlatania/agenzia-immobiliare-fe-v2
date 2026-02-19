@@ -4,19 +4,20 @@ import {RicercaRequest} from "@/utils/types";
 export const initialStateRicerca: RicercaRequest = {
     tipologiaAnnuncioId: "",
     tipologiaImmobileId: "",
-    prezzoDa: 0,
-    prezzoAl: 0,
+    prezzoDa: "",
+    prezzoAl: "",
     dataDal: "",
     dataAl: "",
-    mqMinimi: 0,
-    stanzeMinime: 0,
+    mqMinimi: "",
+    stanzeMinime: "",
+    piano: "",
     citta: "",
-    ascensore: 0,
-    garage: 0,
-    terrazzo: 0,
-    postoAuto: 0,
+    ascensore: "",
+    garage: "",
+    terrazzo: "",
+    postoAuto: "",
     zona: "",
-    speseAggiuntive: 0,
+    speseAggiuntive: "",
     titolo: ""
 }
 
@@ -31,6 +32,9 @@ const ricercaAnnuncioSlice = createSlice({
         },
         resetRicerca: (state) => {
             return initialStateRicerca
-        }
+        },
     }
 })
+
+export const {setRicerca, resetRicerca} = ricercaAnnuncioSlice.actions
+export default ricercaAnnuncioSlice.reducer

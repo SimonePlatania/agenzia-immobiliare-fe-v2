@@ -76,7 +76,7 @@
     "sweetalert2": "^11.7.3",
     "typescript-eslint": "^8.55.0",
     "vite-plugin-eslint2": "^5.0.4",
-    "yup": "^0.31.1"
+    "yup": "^1.7.1"
   },
   "overrides": {
     "electron-to-chromium": "1.5.254",
