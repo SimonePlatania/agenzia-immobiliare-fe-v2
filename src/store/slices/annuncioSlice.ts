@@ -1,5 +1,5 @@
-import {Annuncio} from "@/utils/types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { Annuncio } from "@/utils/types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export const initialStateAnnuncio: Annuncio = {
     cittaId: 0,
@@ -28,9 +28,7 @@ const annuncioSlice = createSlice({
     name: "annuncio",
     initialState: initialStateAnnuncio,
     reducers: {
-        setAnnuncio: (
-            state,
-            action: PayloadAction<Annuncio>) => {
+        setAnnuncio: (state, action: PayloadAction<Annuncio>) => {
             return action.payload
         },
         resetAnnuncio: (state) => {
@@ -39,9 +37,6 @@ const annuncioSlice = createSlice({
     }
 })
 
-
-const {actions, reducer} = annuncioSlice
-export const {
-    setAnnuncio
-} = actions
+const { actions, reducer } = annuncioSlice
+export const { setAnnuncio, resetAnnuncio } = actions
 export default annuncioSlice.reducer

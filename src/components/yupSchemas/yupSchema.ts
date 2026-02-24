@@ -53,16 +53,19 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
     prezzo: yup
         .number()
         .required("Il campo è obbligatorio")
-        .min(0, "Il prezzo non può essere inferiore a 0"),
+        .min(1, "Il prezzo non può essere inferiore o uguale a 0"),
     zona: yup.string().required("Il campo è obbligatorio"),
     mq: yup
         .number()
         .required("Il campo è obbligatorio")
-        .min(0, "Il valore dei metri quadri non può essere inferiore a 0"),
+        .min(
+            1,
+            "Il valore dei metri quadri non può essere inferiore o uguale a 0"
+        ),
     numeroStanze: yup
         .number()
         .required("Il campo è obbligatorio")
-        .min(0, "Il numero di stanze non può essere inferiore a 0"),
+        .min(1, "Il numero di stanze non può essere inferiore o uguale a 0"),
     piano: yup.number().required("Il piano è obbligatorio"),
     esisteAscensore: yup
         .string()

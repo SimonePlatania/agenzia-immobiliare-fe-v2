@@ -1,18 +1,24 @@
-import {Navigate, Route, Routes, useLocation, useNavigationType} from "react-router-dom"
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {resetDangerMessage} from "@/store/slices/messagesSlice";
-import {AppPaths} from "@/utils/constants/routes";
-import Login from "@/components/pages/Login";
-import Registrazione from "@/components/pages/Registrazione";
-import CreazioneAnnuncio from "@/components/pages/CreazioneAnnuncio";
-import RicercaAnnuncio from "@/components/pages/RicercaAnnuncio";
-import ProtectedRoute from "@/custom/utils/ProtectedRoute";
-import {Ruolo} from "@/utils/constants/consts";
+import {
+    Navigate,
+    Route,
+    Routes,
+    useLocation,
+    useNavigationType
+} from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { useEffect } from "react"
+import { resetDangerMessage } from "@/store/slices/messagesSlice"
+import { AppPaths } from "@/utils/constants/routes"
+import Login from "@/components/pages/Login"
+import Registrazione from "@/components/pages/Registrazione"
+import CreazioneAnnuncio from "@/components/pages/CreazioneAnnuncio"
+import RicercaAnnuncio from "@/components/pages/RicercaAnnuncio"
+import ProtectedRoute from "@/custom/utils/ProtectedRoute"
+import { Ruolo } from "@/utils/constants/consts"
 
 const MainRouter = () => {
-    const {pathname} = useLocation();
-    const dispatch = useDispatch();
+    const { pathname } = useLocation()
+    const dispatch = useDispatch()
     const action = useNavigationType()
 
     useEffect(() => {
@@ -24,28 +30,43 @@ const MainRouter = () => {
             <Routes>
                 <Route
                     path={AppPaths.REDIRECT}
-                    element={<Navigate replace to={AppPaths.REGISTER}/>}
+                    element={<Navigate replace to={AppPaths.REGISTER} />}
                 />
-                <Route path={AppPaths.RICERCA_MODIFICA} element={<RicercaAnnuncio/>}/>
-                <Route path={AppPaths.LOGIN} element={<Login/>}/>
-                <Route path={AppPaths.REGISTER}
-                       element={
-                           <ProtectedRoute ruoliAutorizzati={[Ruolo.AMMINISTRATORE, Ruolo.UTENTE]}>
-                               <Registrazione/>
-                           </ProtectedRoute>
-                       }
+                <Route
+                    path={AppPaths.RICERCA_MODIFICA}
+                    element={<RicercaAnnuncio />}
+                />
+                <Route path={AppPaths.LOGIN} element={<Login />} />
+                <Route
+                    path={AppPaths.REGISTER}
+                    element={
+                        <ProtectedRoute
+                            ruoliAutorizzati={[
+                                Ruolo.AMMINISTRATORE,
+                                Ruolo.UTENTE
+                            ]}
+                        >
+                            <Registrazione />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path={AppPaths.CREA_ANNUNCIO}
                     element={
-                        <ProtectedRoute ruoliAutorizzati={[Ruolo.AMMINISTRATORE]}>
-                            <CreazioneAnnuncio/>
+                        <ProtectedRoute
+                            ruoliAutorizzati={[Ruolo.AMMINISTRATORE]}
+                        >
+                            <CreazioneAnnuncio />
                         </ProtectedRoute>
                     }
+                />
+                <Route
+                    path={AppPaths.ANNUNCIO_DETTAGLIO}
+                    element={<CreazioneAnnuncio />}
                 />
             </Routes>
         </div>
     )
 }
 
-export default MainRouter;
+export default MainRouter

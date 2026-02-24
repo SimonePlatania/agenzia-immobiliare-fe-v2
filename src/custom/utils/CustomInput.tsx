@@ -141,9 +141,10 @@ const CustomInput = ({
                         onBlurEvent ? onBlurEvent(e) : ""
                         await form.trigger(formField)
                     }}
-                    className={`form-control ${
-                        isInvalid() ? "is-invalid" : ""
-                    }`}
+                    className={`form-control 
+                        ${isInvalid() ? "is-invalid" : ""}
+                        ${readOnly ? "readonly-select" : ""}
+                    `}
                     disabled={disabled ?? false}
                     readOnly={readOnly ?? false}
                     placeholder={placeholder ?? ""}
@@ -254,9 +255,8 @@ const CustomInput = ({
                             e.preventDefault()
                         }
                     }}
-                    className={`form-control ${
-                        isInvalid() ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${isInvalid() ? "is-invalid" : ""}
+                    ${readOnly ? "readonly-select" : ""}`}
                     disabled={disabled ? disabled : false}
                     readOnly={readOnly ? readOnly : false}
                     placeholder={
@@ -670,7 +670,8 @@ const CustomInput = ({
             <textarea
                 className={`form-control ${classes} ${
                     isInvalid() ? "is-invalid" : ""
-                }`}
+                }
+                ${readOnly ? "readonly-select" : ""}`}
                 id={field}
                 name={field}
                 value={value ? value : formValue ?? ""}

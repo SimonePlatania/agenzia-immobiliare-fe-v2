@@ -7,7 +7,7 @@ import {
 } from "@/api/tipologicheApi"
 import { useDispatch, useSelector } from "react-redux"
 import { setGrowl } from "@/store/slices/uiSlice"
-import { createErrorGrowl } from "@/custom/modal/Growl"
+import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
 import { InputTypes } from "@/utils/constants/consts"
@@ -15,8 +15,11 @@ import { STATI } from "@/utils/utils"
 import { useRicercaAnnuncioMutation } from "@/api/annuncioApi"
 import { initialStateRicerca } from "@/store/slices/ricercaAnnuncioSlice"
 import { setListaAnnunci } from "@/store/slices/listaAnnunciSlice"
-import { useEffect, useState } from "react"
-import { findByTipologica } from "@/utils/genericUtils"
+import { useState } from "react"
+import { findByTipologica, scrollToTop } from "@/utils/genericUtils"
+import { setAnnuncio } from "@/store/slices/annuncioSlice"
+import { useNavigate } from "react-router-dom"
+import { AppPaths } from "@/utils/constants/routes"
 
 const formConfig: UseFormProps<RicercaRequest> = {
     defaultValues: {
@@ -56,6 +59,7 @@ export const RicercaAnnuncio = () => {
     const isListaPositiva: boolean = listaPositiva.length > 0
     const [ricercaEffettuata, setRicercaEffettuata] = useState<boolean>(false)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleReset = () => {
         form.reset(initialStateRicerca)
@@ -79,6 +83,9 @@ export const RicercaAnnuncio = () => {
                 pageSize: 100
             }).unwrap()
             dispatch(setListaAnnunci(response.annunci))
+            dispatch(
+                setGrowl(createSuccessGrowl("Ricerca effettuata con successo"))
+            )
         } catch (err: any) {
             const messaggio = err?.data?.messaggio || "Errore generico"
             dispatch(setGrowl(createErrorGrowl(messaggio)))
@@ -86,9 +93,19 @@ export const RicercaAnnuncio = () => {
         }
     }
 
-    useEffect(() => {
-        console.log("----sadasd", tipologieAnnunci)
-    }, [tipologieAnnunci])
+    const handleDettaglio = (annuncio: Annuncio) => {
+        dispatch(setAnnuncio(annuncio))
+        scrollToTop()
+        navigate(AppPaths.ANNUNCIO_DETTAGLIO)
+    }
+
+    const handleModifica = (isEditMode: boolean, annuncio: Annuncio) => {
+        dispatch(setAnnuncio(annuncio))
+        scrollToTop()
+        navigate(AppPaths.ANNUNCIO_DETTAGLIO, {
+            state: { isEditMode: true }
+        })
+    }
 
     return (
         <form onSubmit={form.handleSubmit(handleRicercaAnnunci)}>
@@ -387,10 +404,29 @@ export const RicercaAnnuncio = () => {
                                                     <td>{annuncio.piano}</td>
                                                     <td>
                                                         <button
-                                                            className="btn btn-general btn-primary btn-sm"
+                                                            className="btn btn-general btn-primary px-1 order-1"
                                                             type={"button"}
+                                                            onClick={() =>
+                                                                handleDettaglio(
+                                                                    annuncio
+                                                                )
+                                                            }
                                                         >
-                                                            Dettagli
+                                                            <i className="bi bi-search"></i>
+                                                            DETTAGLI
+                                                        </button>
+                                                        <button
+                                                            className="btn btn-general btn-primary px-1 order-2"
+                                                            type={"button"}
+                                                            onClick={() =>
+                                                                handleModifica(
+                                                                    true,
+                                                                    annuncio
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="bi bi-pencil-square"></i>
+                                                            MODIFICA
                                                         </button>
                                                     </td>
                                                 </tr>

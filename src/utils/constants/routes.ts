@@ -14,7 +14,8 @@ export enum AppPaths {
     LOGIN = "/login",
     REGISTER = "/registrazione",
     AGENZIA_IMMOBILIARE = "agenzia-immobiliare",
-    CREA_ANNUNCIO = "/crea-annuncio"
+    CREA_ANNUNCIO = "/crea-annuncio",
+    ANNUNCIO_DETTAGLIO = "/annuncio/dettaglio"
 }
 
 export const pathLabels: { [key in AppPaths]: string } = {
@@ -28,11 +29,13 @@ export const pathLabels: { [key in AppPaths]: string } = {
     [AppPaths.NUOVA_COMUNICAZIONE_PREVENTIVA]: "Nuova comunicazione preventiva",
     [AppPaths.COMUNICAZIONE_PREVENTIVA_DETAIL]: "Comunicazione preventiva",
     [AppPaths.COMUNICAZIONI_PREVENTIVE]: "Comunicazioni preventive",
-    [AppPaths.COMUNICAZIONE_PREVENTIVA_ANNULLATA_DETAIL]: "Comunicazione preventiva annullata",
+    [AppPaths.COMUNICAZIONE_PREVENTIVA_ANNULLATA_DETAIL]:
+        "Comunicazione preventiva annullata",
     [AppPaths.LOGIN]: "Login",
     [AppPaths.REGISTER]: "Registrazione",
     [AppPaths.AGENZIA_IMMOBILIARE]: "Agenzia immobiliare",
-    [AppPaths.CREA_ANNUNCIO]: "Crea annuncio"
+    [AppPaths.CREA_ANNUNCIO]: "Crea annuncio",
+    [AppPaths.ANNUNCIO_DETTAGLIO]: "Dettaglio annuncio"
 }
 
 export const PATHS_NO_NAVBAR: Array<string | AppPaths> = [
