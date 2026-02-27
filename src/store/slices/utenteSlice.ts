@@ -1,5 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {LoginResponse, UtenteResponse} from "@/utils/types";
+import { createSlice } from "@reduxjs/toolkit"
+import { LoginResponse, UtenteResponse } from "@/utils/types"
 
 const initialUtenteState: UtenteResponse = {
     cognome: "",
@@ -22,18 +22,19 @@ const utenteSlice = createSlice({
     name: "utente",
     initialState: initialLoginState,
     reducers: {
-        setLoginUtente: (state, {payload}) => {
+        setLoginUtente: (state, { payload }) => {
             return payload
         },
         setLogoutUtente: (state) => {
             return initialLoginState
         },
-        setRegistraUtente: (state, {payload}) => {
+        setRegistraUtente: (state, { payload }) => {
             return payload
         }
-    },
+    }
 })
 
-export const {actions, reducer} = utenteSlice
-export const {setLoginUtente, setRegistraUtente, setLogoutUtente} = actions
+export const { setLoginUtente, setRegistraUtente, setLogoutUtente } =
+    utenteSlice.actions
+export const resetAll = { type: "RESET_ALL" }
 export default utenteSlice.reducer

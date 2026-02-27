@@ -1,5 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {LoginResponse} from "@/utils/types";
+import { createSlice } from "@reduxjs/toolkit"
+import { LoginResponse } from "@/utils/types"
 
 export const initialStateLogin: LoginResponse = {
     cognome: "",
@@ -20,8 +20,7 @@ const loginSlice = createSlice({
             return initialStateLogin
         }
     }
-});
+})
 
-const {actions, reducer} = loginSlice
-export const {setLogin} = actions
+export const { setLogin, clearLogin } = loginSlice.actions
 export default loginSlice.reducer

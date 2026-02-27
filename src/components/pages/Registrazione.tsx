@@ -1,14 +1,15 @@
 import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
-import { UtenteRequest } from "@/utils/types"
+import { ErrorMessage, UtenteRequest } from "@/utils/types"
 import { useRegistrazioneUserMutation } from "@/api/utenteApi"
 import { Button, Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
-import { InputTypes } from "@/utils/constants/consts"
+import { InputTypes, Ruolo } from "@/utils/constants/consts"
 import { useGetRuoliQuery } from "@/api/tipologicheApi"
 import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl } from "@/custom/modal/Growl"
+import { AppState } from "@/store/store"
 
 const formConfig: UseFormProps<UtenteRequest> = {
     defaultValues: {
@@ -30,15 +31,19 @@ export const Registrazione = () => {
         useRegistrazioneUserMutation()
     const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
     const form: UseFormReturn<any> = useForm<UtenteRequest>(formConfig)
+    const { ruolo } = useSelector((state: AppState) => state.utente)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const handleRegister = async () => {
+    const isAdmin: boolean = ruolo === Ruolo.AMMINISTRATORE
+
+    const handleRegister = async (): Promise<void> => {
         try {
             await registrazioneUser(form.watch()).unwrap()
         } catch (err: any) {
-            const messaggio = err?.data?.messaggio || "Errore generico"
+            const messaggio =
+                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
             dispatch(setGrowl(createErrorGrowl(messaggio)))
         }
     }
@@ -96,23 +101,25 @@ export const Registrazione = () => {
                     form={form}
                 />
 
-                {/*<CustomInput*/}
-                {/*    field="ruoloId"*/}
-                {/*    descr="Ruolo"*/}
-                {/*    placeholder="Inserisci il ruolo"*/}
-                {/*    type={InputTypes.SELECT}*/}
-                {/*    form={form}*/}
-                {/*    options={ruoli ?? []}*/}
-                {/*    isLoading={ruoliLoading}*/}
-                {/*/>*/}
+                {isAdmin && (
+                    <CustomInput
+                        field="ruoloId"
+                        descr="Ruolo"
+                        placeholder="Inserisci il ruolo"
+                        type={InputTypes.SELECT}
+                        form={form}
+                        options={ruoli ?? []}
+                        isLoading={ruoliLoading}
+                    />
+                )}
 
                 <Row>
                     <Col sm={12} md={12}>
                         <Button
-                            variant="outline-dark"
                             type={"submit"}
                             disabled={isLoading}
-                            className="mt-3"
+                            className="btn btn-general"
+                            variant="outline-dark"
                         >
                             <i className="bi bi-sign-intersection-fill"></i>
                             {isLoading ? " Accesso..." : " REGISTRATI"}
@@ -121,7 +128,7 @@ export const Registrazione = () => {
                             variant="outline-dark"
                             disabled={isLoading}
                             onClick={() => navigate("/login")}
-                            className="mt-3"
+                            className="btn btn-general"
                         >
                             <i className="bi bi-door-open-fill"></i>
                             {isLoading ? " Accesso..." : " LOGIN"}

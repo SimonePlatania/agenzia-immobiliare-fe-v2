@@ -5,11 +5,14 @@ import { AppState } from "@/store/store"
 import { capitalize } from "lodash"
 import { AppPaths } from "@/utils/constants/routes"
 import { useLogoutUserMutation } from "@/api/utenteApi"
-import { setLogoutUtente } from "@/store/slices/utenteSlice"
+import { resetAll, setLogoutUtente } from "@/store/slices/utenteSlice"
 import { setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl } from "@/custom/modal/Growl"
 // @ts-ignore
 import logo from "@/img/logo.jpg"
+import { setSection } from "@/store/slices/sectionSlice"
+import { Sections } from "@/utils/constants/consts"
+import { ErrorMessage } from "@/utils/types"
 
 const Header = () => {
     const [logoutUser, { isLoading, error }] = useLogoutUserMutation()
@@ -22,10 +25,23 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             await logoutUser().unwrap()
+            dispatch(resetAll)
             dispatch(setLogoutUtente())
             navigate(AppPaths.LOGIN)
         } catch (err: any) {
-            const messaggio = err?.data?.messaggio || "Errore generico"
+            const messaggio =
+                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
+            dispatch(setGrowl(createErrorGrowl(messaggio)))
+        }
+    }
+
+    const handleImpostazioni = () => {
+        try {
+            dispatch(setSection(Sections.IMPOSTAZIONI))
+            navigate(AppPaths.IMPOSTAZIONI)
+        } catch (err: any) {
+            const messaggio =
+                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
             dispatch(setGrowl(createErrorGrowl(messaggio)))
         }
     }
@@ -36,6 +52,7 @@ const Header = () => {
                 <Navbar.Brand
                     as={Link}
                     to={AppPaths.RICERCA_MODIFICA}
+                    onClick={() => dispatch(setSection(Sections.RICERCA))}
                     className="d-flex align-items-center gap-2"
                 >
                     <img
@@ -55,7 +72,7 @@ const Header = () => {
                         <i className="bi bi-person-fill d-md-none"></i>
                     </Dropdown.Toggle>
                     <Dropdown.Menu align="end">
-                        <Dropdown.Item>
+                        <Dropdown.Item onClick={handleImpostazioni}>
                             <i className="bi bi-gear-fill"></i> | Impostazioni
                         </Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}>

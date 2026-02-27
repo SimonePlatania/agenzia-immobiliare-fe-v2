@@ -37,6 +37,5 @@ const annuncioSlice = createSlice({
     }
 })
 
-const { actions, reducer } = annuncioSlice
-export const { setAnnuncio, resetAnnuncio } = actions
+export const { setAnnuncio, resetAnnuncio } = annuncioSlice.actions
 export default annuncioSlice.reducer

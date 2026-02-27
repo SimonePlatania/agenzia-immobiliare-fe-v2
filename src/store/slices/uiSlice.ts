@@ -1,9 +1,9 @@
-import type {BreadCrumbType} from "./breadCrumb-slice.ts";
-import {AppPaths} from "@/utils/constants/routes";
-import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import {createErrorGrowl} from "@/custom/modal/Growl";
-import {Session} from "@/utils/constants/consts";
-import {LoginResponse} from "@/utils/types";
+import type { BreadCrumbType } from "./breadCrumb-slice.ts"
+import { AppPaths } from "@/utils/constants/routes"
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
+import { createErrorGrowl } from "@/custom/modal/Growl"
+import { Session } from "@/utils/constants/consts"
+import { LoginResponse } from "@/utils/types"
 
 export type SessionTime = Session | number
 export type GrowlType = {
@@ -72,9 +72,9 @@ export const renderDesc = (
     desc: string
 ) => {
     return larghezzaFinestra < 1650 &&
-    descTouched.some((d: string) =>
-        d.toLowerCase().includes(desc.toLowerCase())
-    )
+        descTouched.some((d: string) =>
+            d.toLowerCase().includes(desc.toLowerCase())
+        )
         ? desc.substring(0, 15) + "..."
         : desc
 }
@@ -124,11 +124,11 @@ const uiSlice = createSlice({
         setGrowl: (state: UiType, action: PayloadAction<GrowlType>) => {
             state.growl = action.payload
         },
-        setStatusMessage: (state: UiType, {payload}) => {
+        setStatusMessage: (state: UiType, { payload }) => {
             state.messageStatus = payload
             return state
         },
-        setErrorGrowl: (state: UiType, {payload}) => {
+        setErrorGrowl: (state: UiType, { payload }) => {
             state.messageStatus = payload
             state.growl = createErrorGrowl(
                 /*decodeStatusMessage(*/ payload /*)*/
@@ -136,7 +136,7 @@ const uiSlice = createSlice({
             state.routeTo = AppPaths.ERROR
             return state
         },
-        setNavigateTo: (state: UiType, {payload}) => {
+        setNavigateTo: (state: UiType, { payload }) => {
             state.routeTo = payload
             return state
         },
@@ -159,7 +159,6 @@ const uiSlice = createSlice({
         }
     }
 })
-const {actions, reducer} = uiSlice
 export const {
     acceptCookieBar,
     setSessionTime,
@@ -175,5 +174,5 @@ export const {
     resetNavigateTo,
     setNavbar,
     resetNavbar
-} = actions
-export default reducer
+} = uiSlice.actions
+export default uiSlice.reducer

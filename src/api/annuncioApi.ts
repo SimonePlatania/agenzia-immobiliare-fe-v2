@@ -20,6 +20,12 @@ export const annuncioApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Annuncio"]
         }),
+        rimuoviAnnuncio: build.mutation<string, number>({
+            query: (id) => ({
+                url: `${AnnuncioRest.ANNUNCIO}${AnnuncioRest.RIMUOVI_ANNUNCIO}/${id}`,
+                method: "DELETE"
+            })
+        }),
         ricercaAnnuncio: build.mutation<
             RicercaResponse,
             {
@@ -53,5 +59,6 @@ export const {
     useCreaAnnuncioMutation,
     useRicercaAnnuncioMutation,
     useRicercaAnnuncioByIdQuery,
-    useModificaAnnuncioMutation
+    useModificaAnnuncioMutation,
+    useRimuoviAnnuncioMutation
 } = annuncioApi

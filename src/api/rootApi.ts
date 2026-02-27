@@ -1,8 +1,8 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
-import {AppPaths} from "@/utils/constants/routes";
-import {setNavigateTo} from "@/store/slices/uiSlice";
-import type {Dispatch} from "react";
-import {type AnyAction, isRejectedWithValue} from "@reduxjs/toolkit";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { AppPaths } from "@/utils/constants/routes"
+import { setNavigateTo } from "@/store/slices/uiSlice"
+import type { Dispatch } from "react"
+import { type AnyAction, isRejectedWithValue } from "@reduxjs/toolkit"
 
 export const ROOT_API_PRIVATE = `${__CONTEXT_PATH__}/api`
 
@@ -35,8 +35,8 @@ export const successMiddleware =
 
 export const rootApi = createApi({
     reducerPath: "privato",
-    baseQuery: fetchBaseQuery({baseUrl: ROOT_API_PRIVATE}),
-    tagTypes: ["User", "Tipologiche", "Miscelazione", "Annuncio"],
+    baseQuery: fetchBaseQuery({ baseUrl: ROOT_API_PRIVATE }),
+    tagTypes: ["User", "Tipologiche", "Miscelazione", "Annuncio", "Domanda"],
     keepUnusedDataFor: 0,
     endpoints: () => ({})
 })

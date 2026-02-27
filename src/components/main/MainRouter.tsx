@@ -15,6 +15,7 @@ import CreazioneAnnuncio from "@/components/pages/CreazioneAnnuncio"
 import RicercaAnnuncio from "@/components/pages/RicercaAnnuncio"
 import ProtectedRoute from "@/custom/utils/ProtectedRoute"
 import { Ruolo } from "@/utils/constants/consts"
+import Impostazioni from "@/components/pages/Impostazioni"
 
 const MainRouter = () => {
     const { pathname } = useLocation()
@@ -63,6 +64,10 @@ const MainRouter = () => {
                 <Route
                     path={AppPaths.ANNUNCIO_DETTAGLIO}
                     element={<CreazioneAnnuncio />}
+                />
+                <Route
+                    path={AppPaths.IMPOSTAZIONI}
+                    element={<Impostazioni />}
                 />
             </Routes>
         </div>

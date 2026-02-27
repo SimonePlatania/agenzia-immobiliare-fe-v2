@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 * {
-    margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
@@ -45,6 +44,26 @@
     cursor: default;
 }
 
+.btn-mini {
+    line-height: 1;
+    text-align: center;
+    background-color: #212529;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+}
+
+.btn-mini:hover {
+    border: 1px solid #212529;
+    line-height: 1;
+    text-align: center;
+    background-color: #ffffff;
+    color: #212529;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+}
+
+
 input:focus,
 select:focus {
     outline: 2px solid #666;
@@ -58,6 +77,49 @@ select:focus {
     width: 100%;
 }
 
+button[type="submit"],
+.btn-general-modal {
+    border: 1px solid #212529;
+    border-radius: 4px;
+    background-color: #212529;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-general-modal:hover {
+    border: 1px solid #212529;
+    background-color: #ffffff;
+    color: #212529;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+button[type="submit"],
+.btn-general-modal-close {
+    border: 1px solid #777b80;
+    border-radius: 4px;
+    background-color: #717478;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-general-modal-close:hover {
+    border: 1px solid #212529;
+    background-color: #ffffff;
+    color: #212529;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 button[type="submit"],
 .btn-general {
@@ -94,4 +156,17 @@ button[type="submit"],
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
+}
+
+.btn-general:disabled {
+    width: -webkit-fill-available;
+    border: 1px solid #6c757d;
+    background-color: #6c757d;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.65;
 }

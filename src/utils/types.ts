@@ -13,6 +13,12 @@ export interface TipologicaDto<T> {
     descrizione: string
 }
 
+export interface ErrorMessage {
+    data: {
+        messaggio: string
+    }
+}
+
 //ANNUNCIO
 export interface Annuncio {
     id?: number
@@ -72,11 +78,11 @@ export interface LoginResponse {
 
 //DOMANDA
 export interface DomandaRequest {
-    id: number
-    dataDomanda: Date | string
+    id?: number
+    dataDomanda?: Date | string
     domanda: string
-    annuncioId: number
-    utenteId: number
+    annuncioId?: number | string
+    utenteId?: number | string
 }
 
 export interface DomandaResponse {

@@ -5,7 +5,9 @@ import {
     addSuccessMessage,
     clearMessages
 } from "@/store/slices/messagesSlice"
-import { Tipologica } from "@/utils/types"
+import { RicercaRequest, Tipologica } from "@/utils/types"
+import { Sections } from "@/utils/constants/consts"
+import { setSection } from "@/store/slices/sectionSlice"
 
 export const onFileSelected = (event: ChangeEvent<any>): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -45,6 +47,24 @@ export const scrollToTop = (offset?: number) => {
         top: offset ?? 200,
         behavior: "smooth"
     })
+}
+
+export const scrollToBottom = () => {
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth"
+    })
+}
+
+export const cleanFiltri = (
+    filtri: RicercaRequest
+): Partial<RicercaRequest> => {
+    return Object.fromEntries(
+        Object.entries(filtri).filter(
+            ([_, value]) =>
+                value !== "" && value !== null && value !== undefined
+        )
+    ) as Partial<RicercaRequest>
 }
 
 export const handleFileSelect = (
@@ -98,4 +118,8 @@ export const findByTipologica = (
     key: number
 ) => {
     return tipologica.find((t: Tipologica<number>) => t.key == key)?.value
+}
+
+export const navigateToSection = (section: Sections, dispatch: any) => {
+    return dispatch(setSection(section))
 }

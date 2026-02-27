@@ -1,5 +1,5 @@
-import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import type {Tipologica, TipologicheState} from "@/utils/types";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
+import type { Tipologica, TipologicheState } from "@/utils/types"
 
 const initialState: TipologicheState = {
     codice: "",
@@ -9,7 +9,7 @@ const initialState: TipologicheState = {
     tipologicaCitta: [],
     tipologicaImmobile: [],
     tipologicaAnnuncio: [],
-    tipologicaClienti: [],
+    tipologicaClienti: []
 }
 
 const tipologicheSlice = createSlice({
@@ -67,8 +67,6 @@ const tipologicheSlice = createSlice({
         }
     }
 })
-
-const {actions, reducer} = tipologicheSlice
 export const {
     setTipologica,
     setListaTipologicheProdMiscelati,
@@ -77,5 +75,5 @@ export const {
     setTipologicaImmobile,
     setTipologicaAnnuncio,
     resetTipologica
-} = actions
+} = tipologicheSlice.actions
 export default tipologicheSlice.reducer

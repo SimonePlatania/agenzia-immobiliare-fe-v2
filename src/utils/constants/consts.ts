@@ -75,13 +75,116 @@ export enum Errors {
 export enum Sections {
     ACQUISIZIONE = "acquisizione",
     MODIFICA = "modifica",
-    INVIA = "invia",
-    CONSULTAZIONE = "consultazione",
-    ANNULLAMENTO = "annullamento"
+    IMPOSTAZIONI = "impostazioni",
+    DETTAGLIO = "dettaglio",
+    RICERCA = "ricerca"
 }
 
 export enum Ruolo {
     AMMINISTRATORE = "AMMINISTRATORE",
     UTENTE = "UTENTE",
     CLIENTE = "CLIENTE"
+}
+
+export const initialStateRedux = {
+    privato: {
+        queries: {},
+        mutations: {},
+        provided: {},
+        subscriptions: {},
+        config: {
+            online: true,
+            focused: true,
+            middlewareRegistered: true,
+            refetchOnFocus: false,
+            refetchOnReconnect: false,
+            refetchOnMountOrArgChange: false,
+            keepUnusedDataFor: 0,
+            reducerPath: "privato"
+        }
+    },
+    ui: {
+        cookieBar: false,
+        sessionTime: 1800,
+        showMessage: false,
+        spinner: false,
+        messageStatus: "",
+        growl: {
+            show: false,
+            header: "",
+            body: "",
+            icon: "",
+            style: ""
+        },
+        routeTo: "",
+        navbar: []
+    },
+    messages: {
+        successMessages: [],
+        infoMessages: [],
+        warningMessages: [],
+        dangerMessages: [],
+        messagesCount: 0
+    },
+    breadcrumb: ["/home"],
+    breadcrumbSaved: ["/home"],
+    tipologica: {
+        codice: "",
+        descrizione: "",
+        tipologicaProdMiscelatiList: [],
+        tipologicaRuoli: [],
+        tipologicaCitta: [],
+        tipologicaImmobile: [],
+        tipologicaAnnuncio: [],
+        tipologicaClienti: []
+    },
+    utente: {
+        id: "",
+        nome: "",
+        cognome: "",
+        email: "",
+        ruolo: ""
+    },
+    section: "acquisizione",
+    annuncio: {
+        cittaId: 0,
+        descrizione: "",
+        esisteAscensore: "",
+        esisteGarage: "",
+        esistePostoAutoAssegnato: "",
+        esisteTerrazzo: "",
+        id: 0,
+        mq: 0,
+        numeroStanze: 0,
+        numeroVisualizzazioni: 0,
+        piano: 0,
+        prezzo: 0,
+        rimosso: false,
+        speseAggiuntive: 0,
+        tipologiaAnnuncioId: 0,
+        tipologiaImmobileId: 0,
+        titolo: "",
+        utenteId: 0,
+        zona: ""
+    },
+    ricerca: {
+        tipologiaAnnuncioId: "",
+        tipologiaImmobileId: "",
+        prezzoDa: "",
+        prezzoAl: "",
+        dataDal: "",
+        dataAl: "",
+        mqMinimi: "",
+        stanzeMinime: "",
+        piano: "",
+        citta: "",
+        ascensore: "",
+        garage: "",
+        terrazzo: "",
+        postoAuto: "",
+        zona: "",
+        speseAggiuntive: "",
+        titolo: ""
+    },
+    listaAnnunci: []
 }
