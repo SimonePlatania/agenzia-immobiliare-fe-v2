@@ -6,8 +6,10 @@ import {
     clearMessages
 } from "@/store/slices/messagesSlice"
 import { RicercaRequest, Tipologica } from "@/utils/types"
-import { Sections } from "@/utils/constants/consts"
+import { DATE, Sections } from "@/utils/constants/consts"
 import { setSection } from "@/store/slices/sectionSlice"
+import { format } from "date-fns"
+import { AnyAction } from "@reduxjs/toolkit"
 
 export const onFileSelected = (event: ChangeEvent<any>): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -120,6 +122,35 @@ export const findByTipologica = (
     return tipologica.find((t: Tipologica<number>) => t.key == key)?.value
 }
 
-export const navigateToSection = (section: Sections, dispatch: any) => {
+export const truncateString = (stringa: string): string => {
+    return stringa.length > 10
+        ? `${stringa.slice(0, 15)}...`
+        : stringa ?? "Nessun risultato"
+}
+
+export const formatDateToDMYHHMM = (date: string | Date): string => {
+    return format(new Date(date), DATE.GIORNO_MESE_ANNO_ORARIO)
+}
+
+export const formatDateToDMY = (date: string | Date): string => {
+    return format(new Date(date), DATE.GIORNO_MESE_ANNO)
+}
+
+export const formatDateToHHMM = (date: string | Date): string => {
+    return format(new Date(date), DATE.ORARIO)
+}
+
+export const navigateToSection = (
+    section: Sections,
+    dispatch: Dispatch<AnyAction>
+) => {
     return dispatch(setSection(section))
+}
+
+export const getNumeroRisulati = (elementi: Array<any>): string => {
+    if (elementi.length === 0) {
+        return "Nessun risultato ottenuto"
+    }
+
+    return `Numero risultati: ${elementi.length}`
 }

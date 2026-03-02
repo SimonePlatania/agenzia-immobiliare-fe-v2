@@ -1,6 +1,6 @@
 import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
-import { Annuncio, DomandaRequest, ErrorMessage } from "@/utils/types"
-import { useEffect, useState } from "react"
+import { Annuncio, DomandaRequest } from "@/utils/types"
+import { Dispatch, useEffect, useState } from "react"
 import {
     useGetCittaQuery,
     useGetClientiQuery,
@@ -25,7 +25,7 @@ import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { STATI } from "@/utils/utils"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { annuncioSchema } from "@/components/yupSchemas/yupSchema"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { AppPaths } from "@/utils/constants/routes"
 import { scrollToBottom, scrollToTop } from "@/utils/genericUtils"
 import { aggiornaListaAnnunci } from "@/store/slices/listaAnnunciSlice"
@@ -33,7 +33,12 @@ import { resetSection, setSection } from "@/store/slices/sectionSlice"
 import { AppState } from "@/store/store"
 import ModalDomanda from "@/custom/modal/ModalDomanda"
 import CustomModal from "@/custom/modal/CustomModal"
-import { useFaiDomandaMutation } from "@/api/domandaRispostaApi"
+import {
+    useFaiDomandaMutation,
+    useGetDomandePersonaliQuery
+} from "@/api/domandaRispostaApi"
+import { AnyAction } from "@reduxjs/toolkit"
+import { getErrorGrowl } from "@/utils/custom-utils"
 
 const formConfig: UseFormProps<Annuncio> = {
     defaultValues: {
@@ -63,9 +68,9 @@ const formConfig: UseFormProps<Annuncio> = {
 }
 
 const CreazioneAnnuncio = () => {
-    const dispatch = useDispatch()
+    const dispatch: Dispatch<AnyAction> = useDispatch()
     const navigate = useNavigate()
-    const location = useLocation()
+    const domanda = useSelector((state: AppState) => state.domanda)
 
     const [creaAnnuncio, { isLoading, error }] = useCreaAnnuncioMutation()
     const { data: tipologieAnnunci, isLoading: tipologieAnnunciLoading } =
@@ -81,36 +86,52 @@ const CreazioneAnnuncio = () => {
         useFaiDomandaMutation()
 
     const form: UseFormReturn<any> = useForm<Annuncio>(formConfig)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const { id } = useSelector((state: AppState) => state.utente)
     const annuncioInStore = useSelector((state: AppState) => state.annuncio)
     const section = useSelector((state: AppState) => state.section)
     const { ruolo } = useSelector((state: AppState) => state.utente)
     const [showDomanda, setshowDomanda] = useState(false)
     const [showAnnuncio, setShowAnnuncio] = useState(false)
 
-    const isEditMode = section === Sections.MODIFICA
+    const {
+        data: domande,
+        isLoading: domandeIsLoading,
+        error: domandeError
+    } = useGetDomandePersonaliQuery()
+
+    const isEditMode: boolean = section === Sections.MODIFICA
     const isViewMode: boolean = section === Sections.DETTAGLIO
-    const isReadOnly = isViewMode
-    const isModifyMode = isEditMode
+    const isReadOnly: boolean = isViewMode
+    const isModifyMode: boolean = isEditMode
     const isAdmin: boolean = ruolo === Ruolo.AMMINISTRATORE
     const isUtente: boolean = ruolo === Ruolo.UTENTE
+
+    const isDomandaGiaInviata = (): boolean => {
+        if (!domande || !annuncioInStore?.id || !id) return false
+
+        return domande.some(
+            (d) =>
+                String(d?.utenteId) === String(id) &&
+                String(d?.annuncioId) === String(annuncioInStore.id)
+        )
+    }
+
     const {
         formState: { isValid }
     } = form
 
     const handleAnnuncio = async (): Promise<void> => {
         try {
-            await creaAnnuncio(form.watch()).unwrap()
-            dispatch(aggiornaListaAnnunci(form.watch()))
+            const values = form.watch()
+            await creaAnnuncio(values).unwrap()
+            dispatch(aggiornaListaAnnunci(values))
             dispatch(
                 setGrowl(createSuccessGrowl("Annuncio creato con successo"))
             )
             scrollToTop()
         } catch (err: unknown) {
             setShowAnnuncio(false)
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
         }
     }
 
@@ -139,24 +160,22 @@ const CreazioneAnnuncio = () => {
     const handleModifica = async (data: Annuncio): Promise<void> => {
         try {
             await modificaAnnuncio(data).unwrap()
-            dispatch(resetSection)
+            dispatch(resetSection())
             dispatch(setAnnuncio(data))
             dispatch(aggiornaListaAnnunci(data))
             dispatch(
                 setGrowl(createSuccessGrowl("Modifica effettuata con successo"))
             )
             scrollToTop()
-        } catch (err: any) {
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
         }
     }
 
     const handleAnnullaModifica = () => {
         form.reset(annuncioInStore)
         scrollToBottom()
-        dispatch(resetSection)
+        dispatch(resetSection())
         navigate(AppPaths.RICERCA_MODIFICA)
     }
 
@@ -165,16 +184,14 @@ const CreazioneAnnuncio = () => {
             await faiDomanda({
                 ...data,
                 annuncioId: annuncioInStore.id,
-                utenteId: annuncioInStore.utenteId
+                utenteId: id
             }).unwrap()
             dispatch(
                 setGrowl(createSuccessGrowl("Domanda effettuata con successo"))
             )
             scrollToTop()
-        } catch (err: any) {
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
             dispatch(setSection(Sections.RICERCA))
             navigate(AppPaths.RICERCA_MODIFICA)
             scrollToTop()
@@ -451,7 +468,10 @@ const CreazioneAnnuncio = () => {
 
                                     {isUtente && (
                                         <button
-                                            className="btn btn-general btn-primary"
+                                            className={
+                                                "btn btn-general btn-primary"
+                                            }
+                                            disabled={isDomandaGiaInviata()}
                                             type="button"
                                             onClick={() => setshowDomanda(true)}
                                         >
@@ -519,7 +539,7 @@ const CreazioneAnnuncio = () => {
                 show={showAnnuncio}
                 setShow={setShowAnnuncio}
                 title="Attenzione"
-                text="Stai per creare l'annuncio, vuoi procedere?"
+                textBody="Stai per creare l'annuncio, vuoi procedere?"
                 confirmText="Conferma"
                 cancelText="Annulla"
                 onConfirm={async (): Promise<void> => {

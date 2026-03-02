@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom"
 import { AppPaths } from "@/utils/constants/routes"
 import MainContent from "@/components/main/MainContent"
 import Growl from "@/custom/modal/Growl"
-import SidebarMenu from "@/structure/SidebarMenu"
 
 const BasicLayout = () => {
     const { pathname } = useLocation()
@@ -23,7 +22,6 @@ const BasicLayout = () => {
             <Container as="main" className="flex-grow-1 pt-2 pb-4">
                 {!isAuthPage ? (
                     <div className="d-flex gap-4">
-                        <SidebarMenu />
                         <div className="flex-grow-1" style={{ minWidth: 0 }}>
                             <MainContent />
                         </div>

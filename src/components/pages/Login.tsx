@@ -1,10 +1,10 @@
 import { Alert, Button, Row } from "react-bootstrap"
 import { useLoginUserMutation } from "@/api/utenteApi"
 import CustomInput from "@/custom/utils/CustomInput"
-import { InputTypes, Ruolo } from "@/utils/constants/consts"
+import { InputTypes } from "@/utils/constants/consts"
 import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
-import { ErrorMessage, LoginRequest } from "@/utils/types"
-import { useState } from "react"
+import { LoginRequest } from "@/utils/types"
+import { Dispatch, useState } from "react"
 import { createErrorGrowl } from "@/custom/modal/Growl"
 import { setGrowl } from "@/store/slices/uiSlice"
 import { useDispatch } from "react-redux"
@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom"
 import { AppPaths } from "@/utils/constants/routes"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { loginSchema } from "@/components/yupSchemas/yupSchema"
+import { AnyAction } from "@reduxjs/toolkit"
+import { getErrorGrowl } from "@/utils/custom-utils"
 
 const formConfig: UseFormProps<LoginRequest> = {
     defaultValues: {
@@ -30,7 +32,7 @@ const Login = () => {
     const [loginUser, { isLoading, error }] = useLoginUserMutation()
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const form: UseFormReturn<any> = useForm<LoginRequest>(formConfig)
-    const dispatch = useDispatch()
+    const dispatch: Dispatch<AnyAction> = useDispatch()
     const navigate = useNavigate()
 
     const handleLogin = async (data: LoginRequest): Promise<void> => {
@@ -38,15 +40,9 @@ const Login = () => {
             const userData = await loginUser(data).unwrap()
             dispatch(resetAll)
             dispatch(setLoginUtente(userData))
-            if (userData.ruolo === Ruolo.AMMINISTRATORE) {
-                navigate(AppPaths.CREA_ANNUNCIO)
-            } else {
-                navigate(AppPaths.RICERCA_MODIFICA)
-            }
-        } catch (err: any) {
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+            navigate(AppPaths.HOME)
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
         }
     }
 

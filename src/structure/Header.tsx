@@ -51,8 +51,8 @@ const Header = () => {
             <Container className="d-flex justify-content-between align-items-center">
                 <Navbar.Brand
                     as={Link}
-                    to={AppPaths.RICERCA_MODIFICA}
-                    onClick={() => dispatch(setSection(Sections.RICERCA))}
+                    to={AppPaths.HOME}
+                    onClick={() => dispatch(setSection(Sections.HOME))}
                     className="d-flex align-items-center gap-2"
                 >
                     <img

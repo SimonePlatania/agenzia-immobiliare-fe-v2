@@ -2,7 +2,7 @@ import { Modal } from "react-bootstrap"
 
 export const ModalCancellaAnnuncio = ({
     title,
-    text,
+    textBody,
     confirmText,
     cancelText,
     show,
@@ -10,9 +10,9 @@ export const ModalCancellaAnnuncio = ({
     onConfirm
 }: {
     title: string
-    text: string
-    confirmText: string
-    cancelText: string
+    textBody?: string | null | undefined
+    confirmText?: string
+    cancelText?: string
     show: boolean
     setShow: any
     onConfirm?: any
@@ -27,7 +27,7 @@ export const ModalCancellaAnnuncio = ({
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>{text}</p>
+                    <p>{textBody}</p>
                 </Modal.Body>
                 <Modal.Footer className={"d-flex justify-content-center"}>
                     <button
@@ -37,13 +37,15 @@ export const ModalCancellaAnnuncio = ({
                     >
                         {confirmText}
                     </button>
-                    <button
-                        className="btn btn-general-modal-close btn-secondary"
-                        type="button"
-                        onClick={handleClose}
-                    >
-                        {cancelText}
-                    </button>
+                    {cancelText !== undefined && cancelText.length > 0 && (
+                        <button
+                            className="btn btn-general-modal-close btn-secondary"
+                            type="button"
+                            onClick={handleClose}
+                        >
+                            {cancelText}
+                        </button>
+                    )}
                 </Modal.Footer>
             </Modal>
         </>

@@ -87,8 +87,10 @@ export interface DomandaRequest {
 
 export interface DomandaResponse {
     id: number
+    titoloAnnuncio: string
     dataDomanda: Date | string
     domanda: string
+    risposta: string
     annuncioId: number
     utenteId: number
     lettoDaUtente: string

@@ -18,13 +18,17 @@
     margin-left: 1rem;
     font-size: 16px;
     font-weight: 700;
-    background-color: #fff;
 }
 
 .fieldset-main {
     border: 1px solid #495057;
     padding: 3rem;
-    background-color: snow;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    background: snow;
+    backdrop-filter: blur(4px);
+
 }
 
 .fieldset-main > legend {
@@ -169,4 +173,31 @@ button[type="submit"],
     cursor: not-allowed;
     pointer-events: none;
     opacity: 0.65;
+}
+
+.clickable-row {
+    cursor: pointer;
+    color: var(--bs-primary);
+    text-decoration: underline;
+    transition: background-color 0.2s;
+}
+
+.clickable-row:hover {
+    background-color: #f8f9fa;
+}
+
+.carousel-style {
+    width: 75%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.carousel-item-style {
+    height: 520px;
+    object-fit: cover;
+    filter: brightness(0.92);
 }

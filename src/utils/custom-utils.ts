@@ -1,12 +1,17 @@
-
-import type {ChangeEvent, Dispatch} from "react";
-import type {UseFormReturn} from "react-hook-form";
-import type {OptionList} from "./types.ts";
-import type {StatoSelectSearch} from "./constants/consts.ts";
-import type {BreadCrumbType} from "@/store/slices/breadCrumb-slice";
-import {addDangerMessage, addSuccessMessage, clearMessages} from "@/store/slices/messagesSlice";
-import {scrollToTop} from "@/utils/genericUtils";
-import {AppPaths, pathLabels} from "@/utils/constants/routes";
+import type { ChangeEvent, Dispatch } from "react"
+import type { UseFormReturn } from "react-hook-form"
+import { ErrorMessage, OptionList } from "@/utils/types"
+import type { StatoSelectSearch } from "./constants/consts.ts"
+import type { BreadCrumbType } from "@/store/slices/breadCrumb-slice"
+import {
+    addDangerMessage,
+    addSuccessMessage,
+    clearMessages
+} from "@/store/slices/messagesSlice"
+import { scrollToTop } from "@/utils/genericUtils"
+import { AppPaths, pathLabels } from "@/utils/constants/routes"
+import { ActionCreatorWithPayload, AnyAction } from "@reduxjs/toolkit"
+import { GrowlType } from "@/store/slices/uiSlice"
 
 export const onFileSelected = (event: ChangeEvent<any>): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -66,13 +71,17 @@ export const handleFileSelect = (
                 form.setValue("nomeFile", r.nomeFile, {
                     shouldValidate: true
                 })
-                dispatch(addSuccessMessage({text:`Allegato caricato correttamente: ${r.nomeFile}`}))
+                dispatch(
+                    addSuccessMessage({
+                        text: `Allegato caricato correttamente: ${r.nomeFile}`
+                    })
+                )
                 scrollToTop()
             })
             .catch((err) => {
                 e.target.value = ""
                 // dispatch(setGrowl(createErrorGrowl(err.message)))
-                dispatch(addDangerMessage({text: err.message}))
+                dispatch(addDangerMessage({ text: err.message }))
                 scrollToTop()
                 form.setValue(e.target.id, "", { shouldValidate: true })
                 form.setValue("nomeFile", "", {
@@ -212,6 +221,17 @@ export const findLabel = (path: AppPaths) => {
         default:
             return pathLabels[path]
     }
+}
+
+export const getErrorGrowl = (
+    dispatch: Dispatch<AnyAction>,
+    setGrowl: ActionCreatorWithPayload<GrowlType, "ui/setGrowl">,
+    createGrowl: (msg: string) => GrowlType,
+    err: unknown
+): void => {
+    const messaggio =
+        (err as ErrorMessage)?.data?.messaggio ?? "Errore generico"
+    dispatch(setGrowl(createGrowl(messaggio)))
 }
 
 export const pathToEsclude: AppPaths[] = [AppPaths.HOME]

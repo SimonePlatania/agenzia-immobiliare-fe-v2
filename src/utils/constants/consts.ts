@@ -25,6 +25,12 @@ export enum Constants {
     WINDOW_LIMIT = 1500
 }
 
+export enum DATE {
+    GIORNO_MESE_ANNO_ORARIO = "dd/MM/yyyy HH:mm",
+    GIORNO_MESE_ANNO = "dd/MM/yyyy",
+    ORARIO = "HH:mm"
+}
+
 export enum InputTypes {
     TEXT = "text",
     PASSWORD = "password",
@@ -77,7 +83,9 @@ export enum Sections {
     MODIFICA = "modifica",
     IMPOSTAZIONI = "impostazioni",
     DETTAGLIO = "dettaglio",
-    RICERCA = "ricerca"
+    RICERCA = "ricerca",
+    DETTAGLIO_FROM_DOMANDA = "dettaglio-domanda",
+    HOME = "home"
 }
 
 export enum Ruolo {

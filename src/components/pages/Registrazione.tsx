@@ -1,5 +1,5 @@
 import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
-import { ErrorMessage, UtenteRequest } from "@/utils/types"
+import { UtenteRequest } from "@/utils/types"
 import { useRegistrazioneUserMutation } from "@/api/utenteApi"
 import { Button, Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl } from "@/custom/modal/Growl"
 import { AppState } from "@/store/store"
+import { Dispatch } from "react"
+import { AnyAction } from "@reduxjs/toolkit"
+import { getErrorGrowl } from "@/utils/custom-utils"
 
 const formConfig: UseFormProps<UtenteRequest> = {
     defaultValues: {
@@ -34,17 +37,15 @@ export const Registrazione = () => {
     const { ruolo } = useSelector((state: AppState) => state.utente)
 
     const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const dispatch: Dispatch<AnyAction> = useDispatch()
 
     const isAdmin: boolean = ruolo === Ruolo.AMMINISTRATORE
 
     const handleRegister = async (): Promise<void> => {
         try {
             await registrazioneUser(form.watch()).unwrap()
-        } catch (err: any) {
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
         }
     }
 

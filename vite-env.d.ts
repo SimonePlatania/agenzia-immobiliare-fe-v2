@@ -18,6 +18,15 @@ declare module "*.svg" {
     const content: any
     export default content
 }
+declare module "*.jpg" {
+    const src: string
+    export default src
+}
+
+declare module "*.jpeg" {
+    const src: string
+    export default src
+}
 
 declare module "core-js/stable" {
     const value: any

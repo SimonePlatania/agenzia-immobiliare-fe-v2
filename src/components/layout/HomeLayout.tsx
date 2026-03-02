@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 import BreadCrumb from "@/custom/Breadcrumb"
-import SidebarMenu from "@/structure/SidebarMenu"
 
 const HomeLayout = () => {
     const { pathname } = useLocation()
@@ -27,9 +26,7 @@ const HomeLayout = () => {
                                 flex: "0 0 auto",
                                 overflowX: "hidden"
                             }}
-                        >
-                            <SidebarMenu />
-                        </div>
+                        ></div>
                     )}
                     <div className="flex-grow-1" style={{ minWidth: 0 }}>
                         <BreadCrumb />

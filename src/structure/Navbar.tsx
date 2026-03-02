@@ -21,6 +21,14 @@ const Navbar = () => {
                 <BsNavbar.Toggle />
                 <BsNavbar.Collapse>
                     <Nav>
+                        <Nav.Link
+                            as={Link}
+                            to={AppPaths.HOME}
+                            onClick={() => dispatch(setSection(Sections.HOME))}
+                            active={pathname === AppPaths.HOME}
+                        >
+                            Home
+                        </Nav.Link>
                         {isAdmin && (
                             <Nav.Link
                                 as={Link}
@@ -33,6 +41,7 @@ const Navbar = () => {
                                 Crea annuncio
                             </Nav.Link>
                         )}
+
                         <Nav.Link
                             as={Link}
                             to={AppPaths.RICERCA_MODIFICA}

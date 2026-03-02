@@ -1,5 +1,5 @@
 import { useForm, UseFormProps } from "react-hook-form"
-import { Annuncio, ErrorMessage, RicercaRequest } from "@/utils/types"
+import { Annuncio, RicercaRequest } from "@/utils/types"
 import {
     useGetCittaQuery,
     useGetTipoAnnunciQuery,
@@ -21,10 +21,11 @@ import {
     rimuoviAnnuncioDaLista,
     setListaAnnunci
 } from "@/store/slices/listaAnnunciSlice"
-import { useState } from "react"
+import { Dispatch, useState } from "react"
 import {
     cleanFiltri,
     findByTipologica,
+    getNumeroRisulati,
     scrollToTop
 } from "@/utils/genericUtils"
 import { setAnnuncio } from "@/store/slices/annuncioSlice"
@@ -33,6 +34,8 @@ import { AppPaths } from "@/utils/constants/routes"
 import { setSection } from "@/store/slices/sectionSlice"
 import { AppState } from "@/store/store"
 import CustomModal from "@/custom/modal/CustomModal"
+import { AnyAction } from "@reduxjs/toolkit"
+import { getErrorGrowl } from "@/utils/custom-utils"
 
 const formConfig: UseFormProps<RicercaRequest> = {
     defaultValues: {
@@ -74,7 +77,7 @@ export const RicercaAnnuncio = () => {
     const listaPositiva = useSelector((state: AppState) => state.listaAnnunci)
     const form = useForm<RicercaRequest>(formConfig)
     const [ricercaEffettuata, setRicercaEffettuata] = useState<boolean>(false)
-    const dispatch = useDispatch()
+    const dispatch: Dispatch<AnyAction> = useDispatch()
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
     const [annuncioSelezionato, setAnnuncioSelezionato] =
@@ -100,10 +103,8 @@ export const RicercaAnnuncio = () => {
             dispatch(
                 setGrowl(createSuccessGrowl("Ricerca effettuata con successo"))
             )
-        } catch (err: any) {
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
             dispatch(setListaAnnunci([]))
         }
     }
@@ -131,10 +132,8 @@ export const RicercaAnnuncio = () => {
             dispatch(
                 setGrowl(createSuccessGrowl("Annuncio cancellato con successo"))
             )
-        } catch (err: any) {
-            const messaggio =
-                (err as ErrorMessage)?.data?.messaggio || "Errore generico"
-            dispatch(setGrowl(createErrorGrowl(messaggio)))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
         }
     }
 
@@ -484,6 +483,18 @@ export const RicercaAnnuncio = () => {
                                             )
                                         )}
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td
+                                                colSpan={12}
+                                                className="text-sm-center text-muted"
+                                            >
+                                                {getNumeroRisulati(
+                                                    listaPositiva ?? []
+                                                )}
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </Row>
                         </fieldset>
@@ -495,7 +506,7 @@ export const RicercaAnnuncio = () => {
                     show={show}
                     setShow={setShow}
                     title="Attenzione"
-                    text="Sei sicuro di voler cancellare questo annuncio?"
+                    textBody="Sei sicuro di voler cancellare questo annuncio?"
                     confirmText="Conferma"
                     cancelText="Annulla"
                     onConfirm={async (): Promise<void> => {
