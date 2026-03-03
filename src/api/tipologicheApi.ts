@@ -1,6 +1,6 @@
-import {rootApi} from "@/api/rootApi"
-import {Tipologica} from "@/utils/types"
-import {TipologicaRest} from "@/utils/constants/endpoints"
+import { rootApi } from "@/api/rootApi"
+import { Tipologica, UtenteResponse } from "@/utils/types"
+import { TipologicaRest, UtenteRest } from "@/utils/constants/endpoints"
 
 export const tipologicheApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
@@ -79,6 +79,13 @@ export const tipologicheApi = rootApi.injectEndpoints({
             },
             providesTags: ["Tipologiche"]
         }),
+        getClienteById: build.query<UtenteResponse, number>({
+            query: (id: number | string) => ({
+                url: `${UtenteRest}/${id}`,
+                method: "GET"
+            }),
+            providesTags: ["User"]
+        })
     })
 })
 
@@ -88,4 +95,5 @@ export const {
     useGetTipoAnnunciQuery,
     useGetTipoImmobiliQuery,
     useGetClientiQuery,
+    useGetClienteByIdQuery
 } = tipologicheApi

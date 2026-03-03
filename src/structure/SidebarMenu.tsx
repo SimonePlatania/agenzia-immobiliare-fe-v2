@@ -66,7 +66,7 @@ const SidebarMenu = () => {
             const isActive = currentSegment === item.path
 
             return (
-                <li key={item.path} className="sidebar-item">
+                <li key={item.label} className="sidebar-item">
                     {item.submenus ? (
                         <>
                             {item.isSeparated && <hr />}

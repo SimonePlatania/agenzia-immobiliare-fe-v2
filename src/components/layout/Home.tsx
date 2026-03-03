@@ -29,7 +29,7 @@ const images = [
 
 const Home = () => {
     return (
-        <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="d-flex justify-content-center align-items-center min-vh-50">
             <div className="carousel-style">
                 <Carousel interval={3000} indicators={true}>
                     {images.map((img, index) => (

@@ -5,6 +5,12 @@
     box-sizing: border-box;
 }
 
+.nav-link.active {
+    border-bottom: 1px solid snow;
+    border-radius: 2px;
+}
+
+/*NOTE -> FIELDSET*/
 .fieldset-bordered {
     border: 1px solid #dee2e6;
     padding: 3rem 3rem 1rem;
@@ -42,12 +48,15 @@
     padding: 2rem 2rem 1rem;
 }
 
+/*NOTE -> READONLY SELECT*/
 .readonly-select {
     background-color: #e9ecef;
     opacity: 1;
     cursor: default;
 }
 
+
+/*NOTE -> BOTTONI*/
 .btn-mini {
     line-height: 1;
     text-align: center;
@@ -66,7 +75,6 @@
     font-family: 'JetBrains Mono', monospace;
     cursor: pointer;
 }
-
 
 input:focus,
 select:focus {
@@ -175,6 +183,7 @@ button[type="submit"],
     opacity: 0.65;
 }
 
+/*NOTE -> RIGA CLICKABILE*/
 .clickable-row {
     cursor: pointer;
     color: var(--bs-primary);
@@ -186,10 +195,12 @@ button[type="submit"],
     background-color: #f8f9fa;
 }
 
+/*NOTE -> CAROUSEL*/
 .carousel-style {
     width: 75%;
     border-radius: 16px;
     overflow: hidden;
+    margin: 3rem auto;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
     background: transparent;
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -201,3 +212,4 @@ button[type="submit"],
     object-fit: cover;
     filter: brightness(0.92);
 }
+

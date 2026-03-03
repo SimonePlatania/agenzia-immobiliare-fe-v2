@@ -1,13 +1,16 @@
 import { useSelector } from "react-redux"
-import { Ruolo } from "@/utils/constants/consts"
+import { Ruolo, Sections } from "@/utils/constants/consts"
 import { AppState } from "@/store/store"
 import DomandeUtente from "@/components/pages/DomandeUtente"
-import { GestioneAnnunci } from "@/components/pages/GestioneAnnunci"
+import SchedaUtente from "@/components/pages/SchedaUtente"
+import GestioneAnnunci from "@/components/pages/GestioneAnnunci"
+import Registrazione from "@/components/pages/Registrazione"
 
 export const Impostazioni = () => {
     const { nome, cognome, ruolo } = useSelector(
         (state: AppState) => state.utente
     )
+    const section = useSelector((state: AppState) => state.section)
     const descrizione: string = `Hey ${nome} ${cognome}.`
     const isAdmin: boolean = ruolo === Ruolo.AMMINISTRATORE
     const isUtente: boolean = ruolo === Ruolo.UTENTE
@@ -16,27 +19,22 @@ export const Impostazioni = () => {
         <>
             <fieldset className="fieldset-bordered fieldset-main mt-5">
                 <legend>Impostazioni</legend>
-
                 <p>{descrizione}</p>
-                {isAdmin && (
-                    <>
-                        <i>
-                            In questa sezione puoi accedere e gestire tutte le
-                            principali funzionalità dell’area amministrativa.
-                            <br></br>
-                            <br></br>
-                            Dalla dashboard puoi avere una panoramica generale
-                            del sistema, creare e ricercare annunci, gestire
-                            quelli esistenti e aggiornare i dati anagrafici dei
-                            clienti.
-                            <br></br>
-                            Inoltre, è possibile registrare nuovi utenti e
-                            modificare la propria password personale in modo
-                            semplice e sicuro.
-                        </i>
-                        <GestioneAnnunci />
-                    </>
-                )}
+                <>
+                    {isAdmin && (
+                        <>
+                            {section === Sections.DETTAGLIO_UTENTE && (
+                                <SchedaUtente />
+                            )}
+                            {section === Sections.IMPOSTAZIONI && (
+                                <GestioneAnnunci />
+                            )}
+                            {section === Sections.REGISTRA_UTENTE && (
+                                <Registrazione />
+                            )}
+                        </>
+                    )}
+                </>
 
                 {isUtente && <DomandeUtente />}
             </fieldset>

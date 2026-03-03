@@ -47,7 +47,7 @@ const Header = () => {
     }
 
     return (
-        <Navbar bg="white" className="border-bottom ">
+        <Navbar bg="white" className="border-bottom">
             <Container className="d-flex justify-content-between align-items-center">
                 <Navbar.Brand
                     as={Link}
@@ -61,22 +61,41 @@ const Header = () => {
                         height={160}
                         style={{ mixBlendMode: "multiply" }}
                     />
-                    <span className="fw-bold">Agenzia immobiliare</span>
+                    <span className="fw-bold d-none d-sm-inline">
+                        Agenzia immobiliare
+                    </span>
                 </Navbar.Brand>
 
                 <Dropdown>
                     <Dropdown.Toggle className="btn btn-general d-flex align-items-center gap-2">
-                        <span className="d-none d-md-inline">
+                        <span
+                            className="d-none d-lg-inline"
+                            style={{
+                                maxWidth: "260px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap"
+                            }}
+                        >
                             Utente: {utente()}
                         </span>
-                        <i className="bi bi-person-fill d-md-none"></i>
+
+                        <i className="bi bi-person-fill d-lg-none"></i>
                     </Dropdown.Toggle>
+
                     <Dropdown.Menu align="end">
+                        <Dropdown.Header className="d-lg-none text-muted small">
+                            {utente()}
+                        </Dropdown.Header>
+                        <Dropdown.Divider className="d-lg-none" />
+
                         <Dropdown.Item onClick={handleImpostazioni}>
-                            <i className="bi bi-gear-fill"></i> | Impostazioni
+                            <i className="bi bi-gear-fill me-2" />
+                            Impostazioni
                         </Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}>
-                            <i className="bi bi-door-closed-fill"></i> | Logout
+                            <i className="bi bi-door-closed-fill me-2" />
+                            Logout
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

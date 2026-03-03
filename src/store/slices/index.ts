@@ -13,6 +13,7 @@ import ricercaAnnuncioSlice from "@/store/slices/ricercaAnnuncioSlice"
 import { initialStateRedux } from "@/utils/constants/consts"
 import domandaSlice from "@/store/slices/domandaSlice"
 import listaDomandeSlice from "@/store/slices/listaDomandeSlice"
+import utenteDettaglioSlice from "@/store/slices/utenteDettaglioSlice"
 
 const appReducer = combineReducers({
     [rootApi.reducerPath]: rootApi.reducer,
@@ -27,7 +28,8 @@ const appReducer = combineReducers({
     ricerca: ricercaAnnuncioSlice,
     listaAnnunci: listaAnnunciSlice,
     domanda: domandaSlice,
-    listaDomande: listaDomandeSlice
+    listaDomande: listaDomandeSlice,
+    utenteDettaglio: utenteDettaglioSlice
 })
 
 const createRootReducer = () => (state: any, action: any) => {

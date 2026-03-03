@@ -1,5 +1,5 @@
 import { rootApi } from "@/api/rootApi"
-import { DomandaRequest, DomandaResponse } from "@/utils/types"
+import { DomandaRequest, DomandaResponse, RispostaDTO } from "@/utils/types"
 import { AnnuncioRest } from "@/utils/constants/endpoints"
 
 export const domandaRispostaApi = rootApi.injectEndpoints({
@@ -18,9 +18,28 @@ export const domandaRispostaApi = rootApi.injectEndpoints({
                 method: "GET"
             }),
             providesTags: ["Domanda"]
+        }),
+        getAllDomande: build.query<DomandaResponse[], void>({
+            query: () => ({
+                url: `${AnnuncioRest.ANNUNCIO}${AnnuncioRest.GET_ALL_DOMANDE}`,
+                method: "GET"
+            }),
+            providesTags: ["Domanda"]
+        }),
+        daiRisposta: build.mutation<void, RispostaDTO>({
+            query: ({ domandaId, ...body }) => ({
+                url: `${AnnuncioRest.ANNUNCIO}/${domandaId}${AnnuncioRest.INSERISCI_RISPOSTA}`,
+                method: "POST",
+                body: body
+            }),
+            invalidatesTags: ["Risposta"]
         })
     })
 })
 
-export const { useFaiDomandaMutation, useGetDomandePersonaliQuery } =
-    domandaRispostaApi
+export const {
+    useFaiDomandaMutation,
+    useDaiRispostaMutation,
+    useGetDomandePersonaliQuery,
+    useGetAllDomandeQuery
+} = domandaRispostaApi

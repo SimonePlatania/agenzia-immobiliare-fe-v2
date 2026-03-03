@@ -40,19 +40,7 @@ const MainRouter = () => {
                     element={<RicercaAnnuncio />}
                 />
                 <Route path={AppPaths.LOGIN} element={<Login />} />
-                <Route
-                    path={AppPaths.REGISTER}
-                    element={
-                        <ProtectedRoute
-                            ruoliAutorizzati={[
-                                Ruolo.AMMINISTRATORE,
-                                Ruolo.UTENTE
-                            ]}
-                        >
-                            <Registrazione />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path={AppPaths.REGISTER} element={<Registrazione />} />
                 <Route
                     path={AppPaths.CREA_ANNUNCIO}
                     element={

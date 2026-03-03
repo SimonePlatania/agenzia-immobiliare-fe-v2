@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { DomandaRequest } from "@/utils/types"
 
-export const initialDomandaState = {
+export const initialDomandaState: DomandaRequest = {
     id: 0,
     dataDomanda: "",
     domanda: "",

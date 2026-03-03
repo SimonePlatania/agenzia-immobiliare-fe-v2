@@ -9,7 +9,7 @@ import { createErrorGrowl } from "@/custom/modal/Growl"
 import { setGrowl } from "@/store/slices/uiSlice"
 import { useDispatch } from "react-redux"
 import { resetAll, setLoginUtente } from "@/store/slices/utenteSlice"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AppPaths } from "@/utils/constants/routes"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { loginSchema } from "@/components/yupSchemas/yupSchema"
@@ -87,6 +87,13 @@ const Login = () => {
                     <i className="bi bi-door-open-fill"></i>
                     {isLoading ? " Accesso..." : " ACCEDI"}
                 </Button>
+
+                <div className="d-flex justify-content-center mt-3">
+                    <p className={"text-muted"}>{"Non hai un account?ㅤ"}</p>
+                    <Link to={AppPaths.REGISTER} className="clickable-row">
+                        Registrati
+                    </Link>
+                </div>
             </fieldset>
 
             {errorMessage && (

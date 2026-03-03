@@ -17,7 +17,8 @@ export enum AppPaths {
     CREA_ANNUNCIO = "/crea-annuncio",
     ANNUNCIO_DETTAGLIO = "/annuncio/dettaglio",
     ANNUNCIO_DETTAGLIO_ID = "/annuncio/dettaglio:id",
-    IMPOSTAZIONI = "/impostazioni"
+    IMPOSTAZIONI = "/impostazioni",
+    DETTAGLIO_UTENTE = "/dettaglio-utente"
 }
 
 export const pathLabels: { [key in AppPaths]: string } = {
@@ -39,7 +40,8 @@ export const pathLabels: { [key in AppPaths]: string } = {
     [AppPaths.CREA_ANNUNCIO]: "Crea annuncio",
     [AppPaths.ANNUNCIO_DETTAGLIO]: "Dettaglio annuncio",
     [AppPaths.IMPOSTAZIONI]: "Impostazioni",
-    [AppPaths.ANNUNCIO_DETTAGLIO_ID]: "Dettaglio"
+    [AppPaths.ANNUNCIO_DETTAGLIO_ID]: "Dettaglio",
+    [AppPaths.DETTAGLIO_UTENTE]: "Dettaglio utente"
 }
 
 export const PATHS_NO_NAVBAR: Array<string | AppPaths> = [

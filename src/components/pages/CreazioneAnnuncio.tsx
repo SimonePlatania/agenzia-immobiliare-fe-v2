@@ -186,6 +186,7 @@ const CreazioneAnnuncio = () => {
                 annuncioId: annuncioInStore.id,
                 utenteId: id
             }).unwrap()
+
             dispatch(
                 setGrowl(createSuccessGrowl("Domanda effettuata con successo"))
             )

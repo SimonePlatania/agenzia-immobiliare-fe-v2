@@ -1,5 +1,10 @@
 import { rootApi } from "@/api/rootApi"
-import { Annuncio, RicercaRequest, RicercaResponse } from "@/utils/types"
+import {
+    Annuncio,
+    RicercaRequest,
+    RicercaResponse,
+    UtenteResponse
+} from "@/utils/types"
 import { AnnuncioRest, RicercaRest } from "@/utils/constants/endpoints"
 
 export const annuncioApi = rootApi.injectEndpoints({
@@ -51,6 +56,20 @@ export const annuncioApi = rootApi.injectEndpoints({
                 method: "GET"
             }),
             providesTags: ["Annuncio"]
+        }),
+        getUtenteByIdAnnuncio: build.query<UtenteResponse, number>({
+            query: (idAnnuncio) => ({
+                url: `${AnnuncioRest.ANNUNCIO}/${idAnnuncio}${AnnuncioRest.DATI_UTENTE_ANNUNCIO}`,
+                method: "GET"
+            }),
+            providesTags: ["Annuncio"]
+        }),
+        getUtenteByIdDomanda: build.query<UtenteResponse, number>({
+            query: (idDomanda) => ({
+                url: `${AnnuncioRest.ANNUNCIO}/${idDomanda}${AnnuncioRest.DATI_UTENTE_DOMANDA}`,
+                method: "GET"
+            }),
+            providesTags: ["Annuncio"]
         })
     })
 })
@@ -60,5 +79,7 @@ export const {
     useRicercaAnnuncioMutation,
     useRicercaAnnuncioByIdQuery,
     useModificaAnnuncioMutation,
-    useRimuoviAnnuncioMutation
+    useRimuoviAnnuncioMutation,
+    useGetUtenteByIdAnnuncioQuery,
+    useGetUtenteByIdDomandaQuery
 } = annuncioApi

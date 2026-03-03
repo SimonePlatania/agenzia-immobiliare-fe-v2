@@ -83,9 +83,11 @@ export enum Sections {
     MODIFICA = "modifica",
     IMPOSTAZIONI = "impostazioni",
     DETTAGLIO = "dettaglio",
+    DETTAGLIO_UTENTE = "dettaglio-utente",
     RICERCA = "ricerca",
     DETTAGLIO_FROM_DOMANDA = "dettaglio-domanda",
-    HOME = "home"
+    HOME = "home",
+    REGISTRA_UTENTE = "registra-utente"
 }
 
 export enum Ruolo {

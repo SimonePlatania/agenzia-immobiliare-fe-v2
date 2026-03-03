@@ -154,3 +154,7 @@ export const getNumeroRisulati = (elementi: Array<any>): string => {
 
     return `Numero risultati: ${elementi.length}`
 }
+
+export const getUtente = (id: number | string): string => {
+    return id === "0" ? "Utente anonimo" : "Utente registrato"
+}

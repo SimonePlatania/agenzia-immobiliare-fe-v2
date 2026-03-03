@@ -4,7 +4,7 @@ export enum UtenteRest {
     LOGIN_UTENTE = `/login`,
     LOGOUT_UTENTE = `/logout`,
     MODIFICA_PASSWORD = `/modifica-password`,
-    MODIFICA_DATI_ANAGRAFICI = `/modifica`,
+    MODIFICA_DATI_ANAGRAFICI = `/modifica`
     // GET_UTENTE = ``,
 }
 
@@ -14,7 +14,7 @@ export enum TipologicaRest {
     GET_TIPO_IMMOBILI = `/lista-tipo-immobili`,
     GET_TIPO_ANNUNCI = `/lista-tipo-annunci`,
     GET_TIPO_RUOLO = `/lista-tipo-ruoli`,
-    GET_CLIENTI = '/lista-clienti'
+    GET_CLIENTI = "/lista-clienti"
 }
 
 export enum RicercaRest {
@@ -35,6 +35,8 @@ export enum AnnuncioRest {
     INSERISCI_DOMANDA = `/inserisci-domanda`,
     INSERISCI_RISPOSTA = `/inserisci-risposta`,
     GET_RISPOSTA_BY_ID = `/risposta`,
-    GET_ALL_DOMANDA = `/lista-domande`,
-    GET_ALL_DOMANDE_PERSONALI = `/lista-domande-personali`
+    GET_ALL_DOMANDE = `/lista-domande`,
+    GET_ALL_DOMANDE_PERSONALI = `/lista-domande-personali`,
+    DATI_UTENTE_ANNUNCIO = `/dati-utente-annuncio`,
+    DATI_UTENTE_DOMANDA = `/dati-utente-domanda`
 }

@@ -206,7 +206,7 @@ export const RicercaAnnuncio = () => {
                             <Col sm={12} md={6}>
                                 <CustomInput
                                     field="prezzoAl"
-                                    descr="Prezzo (Al)"
+                                    descr="Prezzo (A)"
                                     placeholder="Inserisci il prezzo massimo"
                                     type={InputTypes.NUMBER}
                                     form={form}
@@ -333,8 +333,7 @@ export const RicercaAnnuncio = () => {
 
                     <Row>
                         <Col
-                            sm={12}
-                            md={12}
+                            xs={12}
                             className="d-flex justify-content-center mt-4 mb-5"
                         >
                             <button
