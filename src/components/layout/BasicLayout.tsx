@@ -10,6 +10,7 @@ import SidebarMenu from "@/structure/SidebarMenu"
 import { AppState } from "@/store/store"
 import { useSelector } from "react-redux"
 import { Ruolo } from "@/utils/constants/consts"
+import Spinner from "@/custom/loading/Spinner"
 
 const BasicLayout = () => {
     const { pathname } = useLocation()
@@ -27,10 +28,10 @@ const BasicLayout = () => {
             {(!isAuthPage || isRegisterForAdmin) && <Header />}
             {(!isAuthPage || isRegisterForAdmin) && <Navbar />}
             <Growl />
-
+            <Spinner />
             <Container as="main" className="flex-grow-1 pt-2 pb-4">
                 {!isAuthPage ? (
-                    <div className="d-flex gap-4">
+                    <div className="d-flex flex-column flex-md-row gap-4">
                         {!isHomePage && <SidebarMenu />}
                         <div className="flex-grow-1" style={{ minWidth: 0 }}>
                             <MainContent />
@@ -40,7 +41,6 @@ const BasicLayout = () => {
                     <MainContent />
                 )}
             </Container>
-
             {!isAuthPage && <Footer />}
         </div>
     )

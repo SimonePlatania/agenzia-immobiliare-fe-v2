@@ -37,9 +37,17 @@ export const GestioneAnnunci = () => {
         useState<DomandaResponse | null>(null)
     const [showDomanda, setShowDomanda] = useState<boolean>(false)
     const [showRisposta, setShowRisposta] = useState<boolean>(false)
+    const [showRispostaData, setShowRispostaData] = useState<boolean>(false)
     const [domandaSelezionata, setDomandaSelezionata] = useState<
         string | null
     >()
+    const [rispostaSelezionata, setRispostaSelezionata] = useState<
+        string | null
+    >()
+    const isRispostaInserita = (risposta: string) => {
+        return risposta !== null && risposta !== ""
+    }
+
     const [utenteSelezionato, setUtenteSelezionato] =
         useState<DomandaResponse | null>(null)
     const { annuncioId } = useSelector((state: AppState) => state.domanda)
@@ -94,6 +102,7 @@ export const GestioneAnnunci = () => {
                 annuncioId: domandaPerRisposta.annuncioId,
                 utenteId: domandaPerRisposta.utenteId
             }).unwrap()
+            dispatch(setDomanda(domande))
             dispatch(
                 setGrowl(createSuccessGrowl("Risposta inviata con successo"))
             )
@@ -190,20 +199,39 @@ export const GestioneAnnunci = () => {
                                             >
                                                 <i className="bi bi-person-badge-fill"></i>
                                             </button>
-                                            <button
-                                                title="Rispondi"
-                                                className="btn btn-sm btn-mini order-3"
-                                                type={"button"}
-                                                disabled={!!domanda.risposta}
-                                                onClick={() => {
-                                                    setDomandaPerRisposta(
-                                                        domanda
-                                                    )
-                                                    setShowRisposta(true)
-                                                }}
-                                            >
-                                                <i className="bi bi-reply"></i>
-                                            </button>
+                                            {!isRispostaInserita(
+                                                domanda.risposta
+                                            ) ? (
+                                                <button
+                                                    title="Rispondi"
+                                                    className="btn btn-sm btn-mini order-3"
+                                                    type={"button"}
+                                                    onClick={() => {
+                                                        setDomandaPerRisposta(
+                                                            domanda
+                                                        )
+                                                        setShowRisposta(true)
+                                                    }}
+                                                >
+                                                    <i className="bi bi-reply"></i>
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    title="Dettaglio risposta"
+                                                    className="btn btn-sm btn-mini order-3"
+                                                    type={"button"}
+                                                    onClick={() => {
+                                                        setRispostaSelezionata(
+                                                            domanda.risposta
+                                                        )
+                                                        setShowRispostaData(
+                                                            true
+                                                        )
+                                                    }}
+                                                >
+                                                    <i className="bi bi-info-circle-fill"></i>
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>
@@ -234,6 +262,15 @@ export const GestioneAnnunci = () => {
                 textBody={domandaSelezionata}
                 confirmText="Chiudi"
                 onConfirm={() => setShowDomanda(false)}
+            />
+
+            <CustomModal
+                show={showRispostaData}
+                setShow={setShowRispostaData}
+                title={"Risposta"}
+                textBody={rispostaSelezionata}
+                confirmText="Chiudi"
+                onConfirm={() => setShowRispostaData(false)}
             />
         </>
     )

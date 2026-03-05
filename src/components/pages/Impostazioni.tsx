@@ -5,6 +5,8 @@ import DomandeUtente from "@/components/pages/DomandeUtente"
 import SchedaUtente from "@/components/pages/SchedaUtente"
 import GestioneAnnunci from "@/components/pages/GestioneAnnunci"
 import Registrazione from "@/components/pages/Registrazione"
+import ListaUtenti from "@/components/pages/ListaUtenti"
+import ModificaPassword from "@/components/pages/ModificaPassword"
 
 export const Impostazioni = () => {
     const { nome, cognome, ruolo } = useSelector(
@@ -23,7 +25,8 @@ export const Impostazioni = () => {
                 <>
                     {isAdmin && (
                         <>
-                            {section === Sections.DETTAGLIO_UTENTE && (
+                            {(section === Sections.DETTAGLIO_UTENTE ||
+                                section === Sections.MODIFICA_UTENTE) && (
                                 <SchedaUtente />
                             )}
                             {section === Sections.IMPOSTAZIONI && (
@@ -32,11 +35,24 @@ export const Impostazioni = () => {
                             {section === Sections.REGISTRA_UTENTE && (
                                 <Registrazione />
                             )}
+                            {section === Sections.LISTA_UTENTI && (
+                                <ListaUtenti />
+                            )}
+                            {section === Sections.MODIFICA_PASSWORD && (
+                                <ModificaPassword />
+                            )}
                         </>
                     )}
                 </>
 
-                {isUtente && <DomandeUtente />}
+                {isUtente && (
+                    <>
+                        {section === Sections.IMPOSTAZIONI && <DomandeUtente />}
+                        {section === Sections.MODIFICA_PASSWORD && (
+                            <ModificaPassword />
+                        )}
+                    </>
+                )}
             </fieldset>
         </>
     )

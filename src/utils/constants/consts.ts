@@ -84,10 +84,22 @@ export enum Sections {
     IMPOSTAZIONI = "impostazioni",
     DETTAGLIO = "dettaglio",
     DETTAGLIO_UTENTE = "dettaglio-utente",
+    MODIFICA_UTENTE = "modifica-utente",
+    LISTA_ANNUNCI = "lista-annunci",
+    LISTA_UTENTI = "lista-utenti",
     RICERCA = "ricerca",
     DETTAGLIO_FROM_DOMANDA = "dettaglio-domanda",
     HOME = "home",
-    REGISTRA_UTENTE = "registra-utente"
+    REGISTRA_UTENTE = "registra-utente",
+    MODIFICA_PASSWORD = "modifica-password",
+    DOMANDE_UTENTE = "domande-utente"
+}
+
+export enum HttpMethods {
+    GET = "GET",
+    POST = "POST",
+    PUT = "PUT",
+    DELETE = "DELETE"
 }
 
 export enum Ruolo {

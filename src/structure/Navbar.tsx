@@ -38,7 +38,7 @@ const Navbar = () => {
                                 }
                                 active={pathname === AppPaths.CREA_ANNUNCIO}
                             >
-                                Crea annuncio
+                                Inserisci annuncio
                             </Nav.Link>
                         )}
 
@@ -51,6 +51,17 @@ const Navbar = () => {
                             active={pathname === AppPaths.RICERCA_MODIFICA}
                         >
                             Ricerca
+                        </Nav.Link>
+
+                        <Nav.Link
+                            as={Link}
+                            to={AppPaths.IMPOSTAZIONI}
+                            onClick={() =>
+                                dispatch(setSection(Sections.IMPOSTAZIONI))
+                            }
+                            active={pathname === AppPaths.IMPOSTAZIONI}
+                        >
+                            Dashboard
                         </Nav.Link>
                     </Nav>
                 </BsNavbar.Collapse>

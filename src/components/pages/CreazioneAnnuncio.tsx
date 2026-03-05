@@ -20,7 +20,7 @@ import {
     setAnnuncio
 } from "@/store/slices/annuncioSlice"
 import { useDispatch, useSelector } from "react-redux"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { STATI } from "@/utils/utils"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -158,6 +158,10 @@ const CreazioneAnnuncio = () => {
     }
 
     const handleModifica = async (data: Annuncio): Promise<void> => {
+        if (isLoading || !isValid) {
+            return
+        }
+        dispatch(enableSpinner())
         try {
             await modificaAnnuncio(data).unwrap()
             dispatch(resetSection())
@@ -167,8 +171,12 @@ const CreazioneAnnuncio = () => {
                 setGrowl(createSuccessGrowl("Modifica effettuata con successo"))
             )
             scrollToTop()
+            setShowAnnuncio(true)
+            navigate(AppPaths.RICERCA_MODIFICA)
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
@@ -208,7 +216,7 @@ const CreazioneAnnuncio = () => {
                             ? "Dettaglio annuncio"
                             : isModifyMode
                             ? "Modifica annuncio"
-                            : "Creazione annuncio"}
+                            : "Inserimento annuncio"}
                     </legend>
 
                     <fieldset className="fieldset-bordered mt-1">
@@ -432,14 +440,15 @@ const CreazioneAnnuncio = () => {
                                         type="submit"
                                         disabled={isLoading || !isValid}
                                         onClick={async (): Promise<void> => {
-                                            const isValid = await form.trigger()
-                                            if (isValid) setShowAnnuncio(true)
+                                            // const isValid = await form.trigger()
+                                            // if (isValid) setShowAnnuncio(true)
+                                            // navigate(AppPaths.RICERCA_MODIFICA)
                                         }}
                                     >
                                         <i className="bi bi-plus-circle-dotted"></i>
                                         {isLoading
-                                            ? " Creazione..."
-                                            : " CREA ANNUNCIO"}
+                                            ? " Inserimento..."
+                                            : " INSERISCI ANNUNCIO"}
                                     </button>
                                     <button
                                         className="btn-general btn btn-primary px-4 order-2"
@@ -458,13 +467,10 @@ const CreazioneAnnuncio = () => {
                                 <>
                                     <button
                                         className="btn btn-general btn-primary px-4 order-2"
-                                        type="submit"
+                                        type="button"
                                         onClick={handleRitornaRicerca}
                                     >
-                                        <i className="bi bi-skip-backward-btn-fill"></i>{" "}
-                                        {isAdmin
-                                            ? "INDIETRO"
-                                            : "TORNA ALLA RICERCA"}
+                                        TORNA ALLA RICERCA
                                     </button>
 
                                     {isUtente && (

@@ -7,32 +7,20 @@ import img5 from "@/img/home-img/img5.jpg"
 import img6 from "@/img/home-img/img6.jpg"
 import img7 from "@/img/home-img/img7.jpg"
 import img8 from "@/img/home-img/img8.jpg"
-import img9 from "@/img/home-img/img9.jpg"
 import img10 from "@/img/home-img/img10.jpg"
 import img11 from "@/img/home-img/img11.jpg"
 import img12 from "@/img/home-img/img12.jpg"
 
-const images = [
-    img1,
-    img2,
-    img3,
-    img4,
-    img5,
-    img6,
-    img7,
-    img8,
-    img9,
-    img10,
-    img11,
-    img12
-]
+const getImgs = (): string[] => {
+    return [img1, img2, img3, img4, img5, img6, img7, img8, img10, img11, img12]
+}
 
 const Home = () => {
     return (
         <div className="d-flex justify-content-center align-items-center min-vh-50">
             <div className="carousel-style">
                 <Carousel interval={3000} indicators={true}>
-                    {images.map((img, index) => (
+                    {getImgs().map((img, index) => (
                         <Carousel.Item key={index}>
                             <img
                                 src={img}

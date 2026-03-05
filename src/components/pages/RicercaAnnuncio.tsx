@@ -6,7 +6,7 @@ import {
     useGetTipoImmobiliQuery
 } from "@/api/tipologicheApi"
 import { useDispatch, useSelector } from "react-redux"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
@@ -94,11 +94,13 @@ export const RicercaAnnuncio = () => {
 
     const handleRicercaAnnunci = async (): Promise<void> => {
         try {
+            dispatch(enableSpinner())
             const response = await ricerca({
                 filtri: cleanFiltri(form.getValues()),
                 page: 0,
                 pageSize: 100
             }).unwrap()
+            setRicercaEffettuata(true)
             dispatch(setListaAnnunci(response.annunci))
             dispatch(
                 setGrowl(createSuccessGrowl("Ricerca effettuata con successo"))
@@ -106,6 +108,8 @@ export const RicercaAnnuncio = () => {
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
             dispatch(setListaAnnunci([]))
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
@@ -340,7 +344,6 @@ export const RicercaAnnuncio = () => {
                                 className="btn btn-general btn-primary px-4 order-1"
                                 type="submit"
                                 disabled={isLoading}
-                                onClick={() => setRicercaEffettuata(true)}
                             >
                                 <i className="bi bi-search"></i>
                                 {isLoading

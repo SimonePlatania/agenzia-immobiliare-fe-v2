@@ -4,7 +4,8 @@ export enum UtenteRest {
     LOGIN_UTENTE = `/login`,
     LOGOUT_UTENTE = `/logout`,
     MODIFICA_PASSWORD = `/modifica-password`,
-    MODIFICA_DATI_ANAGRAFICI = `/modifica`
+    MODIFICA_DATI_ANAGRAFICI = `/modifica`,
+    LISTA_UTENTI = `/lista-utenti`
     // GET_UTENTE = ``,
 }
 

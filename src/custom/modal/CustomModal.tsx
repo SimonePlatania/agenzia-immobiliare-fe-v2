@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap"
 
-export const ModalCancellaAnnuncio = ({
+const CustomModal = ({
     title,
     textBody,
     confirmText,
@@ -13,6 +13,7 @@ export const ModalCancellaAnnuncio = ({
     textBody?: string | null | undefined
     confirmText?: string
     cancelText?: string
+    input?: any
     show: boolean
     setShow: any
     onConfirm?: any
@@ -37,6 +38,7 @@ export const ModalCancellaAnnuncio = ({
                     >
                         {confirmText}
                     </button>
+
                     {cancelText !== undefined && cancelText.length > 0 && (
                         <button
                             className="btn btn-general-modal-close btn-secondary"
@@ -52,4 +54,4 @@ export const ModalCancellaAnnuncio = ({
     )
 }
 
-export default ModalCancellaAnnuncio
+export default CustomModal

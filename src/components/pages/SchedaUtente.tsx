@@ -1,47 +1,87 @@
 import { Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
 import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
-import { UtenteResponse } from "@/utils/types"
+import { ModificaUtenteDTO, UtenteResponse } from "@/utils/types"
 import { InputTypes, Sections } from "@/utils/constants/consts"
 import { AppState } from "@/store/store"
 import { useDispatch, useSelector } from "react-redux"
-import { Dispatch, useEffect } from "react"
+import { Dispatch, useState } from "react"
 import { useGetRuoliQuery } from "@/api/tipologicheApi"
 import { AppPaths } from "@/utils/constants/routes"
 import { useNavigate } from "react-router-dom"
 import { AnyAction } from "@reduxjs/toolkit"
 import { setSection } from "@/store/slices/sectionSlice"
-
-const formConfig: UseFormProps<UtenteResponse> = {
-    defaultValues: {
-        id: "",
-        nome: "",
-        cognome: "",
-        email: "",
-        telefono: "",
-        ruoloId: 0
-    },
-    resetOptions: {
-        keepDirtyValues: true,
-        keepErrors: true
-    }
-}
+import { useModificaDatiAnagraficiMutation } from "@/api/utenteApi"
+import { getErrorGrowl } from "@/utils/custom-utils"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
+import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
+import { isEqual } from "lodash"
+import CustomModal from "@/custom/modal/CustomModal"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { modificaUtenteSchema } from "@/components/yupSchemas/yupSchema"
 
 export const SchedaUtente = () => {
-    const form: UseFormReturn<any> = useForm<UtenteResponse>(formConfig)
     const utente = useSelector((state: AppState) => state.utenteDettaglio)
+    const formConfig: UseFormProps<UtenteResponse> = {
+        defaultValues: {
+            id: utente.id,
+            nome: utente.nome,
+            cognome: utente.cognome,
+            email: utente.email,
+            telefono: utente.telefono,
+            ruoloId: utente.ruoloId
+        },
+        resetOptions: {
+            keepDirtyValues: true,
+            keepErrors: true
+        },
+        resolver: yupResolver(modificaUtenteSchema),
+        mode: "onChange"
+    }
+    const form: UseFormReturn<any> = useForm<UtenteResponse>(formConfig)
+    const [showModal, setShowModal] = useState<boolean>(false)
     const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
+    const [modificaDatiAnagrafici, { isLoading, error }] =
+        useModificaDatiAnagraficiMutation()
     const navigate = useNavigate()
     const dispatch: Dispatch<AnyAction> = useDispatch()
+    const section = useSelector((state: AppState) => state.section)
+    const isEditMode: boolean = section !== Sections.MODIFICA_UTENTE
 
     const handleIndietro = () => {
         dispatch(setSection(Sections.IMPOSTAZIONI))
         navigate(AppPaths.IMPOSTAZIONI)
     }
 
-    useEffect(() => {
-        form.reset(utente)
-    })
+    const handleModifica = () => {
+        dispatch(setSection(Sections.MODIFICA_UTENTE))
+    }
+
+    const disableButton = (): boolean => {
+        form.formState.isValid
+        const formValues = form.getValues()
+        return isEqual(formValues, utente)
+    }
+
+    const handleSalva = async (data: ModificaUtenteDTO): Promise<void> => {
+        try {
+            dispatch(enableSpinner())
+            await modificaDatiAnagrafici({
+                ...data,
+                id: Number(utente.id)
+            }).unwrap()
+            dispatch(
+                setGrowl(createSuccessGrowl("Utente modificato con successo"))
+            )
+            dispatch(setSection(Sections.IMPOSTAZIONI))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+            form.reset()
+            setShowModal(false)
+        } finally {
+            dispatch(disableSpinner())
+        }
+    }
 
     return (
         <>
@@ -51,7 +91,7 @@ export const SchedaUtente = () => {
                     <Col sm={12} md={2}>
                         <CustomInput
                             field={"id"}
-                            descr="Id utente"
+                            descr="ID"
                             type={InputTypes.TEXT}
                             readOnly={true}
                             form={form}
@@ -62,7 +102,7 @@ export const SchedaUtente = () => {
                             field={"nome"}
                             descr={"Nome"}
                             type={InputTypes.TEXT}
-                            readOnly={true}
+                            readOnly={isEditMode}
                             form={form}
                         />
                     </Col>
@@ -71,7 +111,7 @@ export const SchedaUtente = () => {
                             field={"cognome"}
                             descr={"Cognome"}
                             type={InputTypes.TEXT}
-                            readOnly={true}
+                            readOnly={isEditMode}
                             form={form}
                         />
                     </Col>
@@ -82,16 +122,16 @@ export const SchedaUtente = () => {
                             field={"email"}
                             descr={"Email"}
                             type={InputTypes.TEXT}
-                            readOnly={true}
+                            readOnly={isEditMode}
                             form={form}
                         />
                     </Col>
                     <Col sm={12} md={3}>
                         <CustomInput
                             field={"telefono"}
-                            descr={"Telefono/Cellulare"}
+                            descr={"Cellulare"}
                             type={InputTypes.NUMBER}
-                            readOnly={true}
+                            readOnly={isEditMode}
                             form={form}
                         />
                     </Col>
@@ -101,7 +141,7 @@ export const SchedaUtente = () => {
                             descr={"Ruolo"}
                             options={ruoli ?? []}
                             type={InputTypes.SELECT}
-                            readOnly={true}
+                            readOnly={isEditMode}
                             form={form}
                         />
                     </Col>
@@ -109,22 +149,51 @@ export const SchedaUtente = () => {
 
                 <Row>
                     <Col xs={12} className="d-flex justify-content-center mt-2">
-                        <button
-                            className="btn btn-general btn-primary px-4 order-1"
-                            type="submit"
-                        >
-                            MODIFICA
-                        </button>
+                        {isEditMode && (
+                            <button
+                                className="btn btn-general btn-primary px-4 order-1"
+                                type="button"
+                                onClick={() => {
+                                    handleModifica()
+                                }}
+                            >
+                                MODIFICA
+                            </button>
+                        )}
+
+                        {!isEditMode && (
+                            <button
+                                className="btn btn-general btn-primary px-4 order-1"
+                                type="button"
+                                disabled={disableButton()}
+                                onClick={() => {
+                                    setShowModal(true)
+                                }}
+                            >
+                                SALVA
+                            </button>
+                        )}
                         <button
                             className="btn btn-general btn-primary px-4 order-2"
                             type="button"
                             onClick={() => handleIndietro()}
                         >
-                            INDIETRO
+                            TORNA A IMPOSTAZIONI
                         </button>
                     </Col>
                 </Row>
             </fieldset>
+            <CustomModal
+                title={"Attenzione"}
+                show={showModal}
+                setShow={setShowModal}
+                textBody={"Sei sicuro di voler modificare questo utente?"}
+                confirmText={"Conferma"}
+                cancelText={"Annulla"}
+                onConfirm={async (): Promise<void> =>
+                    await handleSalva(form.watch())
+                }
+            ></CustomModal>
         </>
     )
 }

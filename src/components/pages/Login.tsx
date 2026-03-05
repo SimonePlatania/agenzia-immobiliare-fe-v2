@@ -6,7 +6,7 @@ import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
 import { LoginRequest } from "@/utils/types"
 import { Dispatch, useState } from "react"
 import { createErrorGrowl } from "@/custom/modal/Growl"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { useDispatch } from "react-redux"
 import { resetAll, setLoginUtente } from "@/store/slices/utenteSlice"
 import { Link, useNavigate } from "react-router-dom"
@@ -37,12 +37,15 @@ const Login = () => {
 
     const handleLogin = async (data: LoginRequest): Promise<void> => {
         try {
+            dispatch(enableSpinner())
             const userData = await loginUser(data).unwrap()
             dispatch(resetAll)
             dispatch(setLoginUtente(userData))
             navigate(AppPaths.HOME)
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
@@ -89,7 +92,7 @@ const Login = () => {
                 </Button>
 
                 <div className="d-flex justify-content-center mt-3">
-                    <p className={"text-muted"}>{"Non hai un account?ㅤ"}</p>
+                    <p className={"text-muted me-2"}>{"Non hai un account?"}</p>
                     <Link to={AppPaths.REGISTER} className="clickable-row">
                         Registrati
                     </Link>

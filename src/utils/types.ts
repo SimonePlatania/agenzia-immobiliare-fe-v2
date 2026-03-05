@@ -62,6 +62,14 @@ export interface UtenteResponse {
     ruoloId: number
 }
 
+export interface ModificaUtenteDTO {
+    nome: string
+    cognome: string
+    email: string
+    telefono: string
+    ruoloId: number
+}
+
 //LOGIN
 export interface LoginRequest {
     email: string

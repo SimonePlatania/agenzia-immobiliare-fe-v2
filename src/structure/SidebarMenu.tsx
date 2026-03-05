@@ -4,12 +4,24 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "@/store/store"
 import useSidebarMenu from "@/hook/useSidebarMenu"
 import { MenuStructure } from "@/store/slices/uiSlice"
+import { Sections } from "@/utils/constants/consts"
 
 const SidebarMenu = () => {
     const { pathname } = useLocation()
     const dispatch = useDispatch<any>()
     const user = useSelector((state: AppState) => state.utente)
     const menu: MenuStructure[] = useSidebarMenu()
+
+    const sectionToLabel: Partial<Record<Sections, string>> = {
+        [Sections.ACQUISIZIONE]: "Inserisci annuncio",
+        [Sections.RICERCA]: "Ricerca annunci",
+        [Sections.LISTA_UTENTI]: "Modifica dati anagrafici cliente",
+        [Sections.IMPOSTAZIONI]: "Gestisci domande",
+        [Sections.REGISTRA_UTENTE]: "Registra nuovo utente",
+        [Sections.MODIFICA_PASSWORD]: "Modifica password personale"
+    }
+
+    const section = useSelector((state: AppState) => state.section)
 
     const collectAllChildLabels = (item: MenuStructure): string[] => {
         if (!item.submenus) return []
@@ -63,7 +75,7 @@ const SidebarMenu = () => {
             if (item.notRendered(pathname, user)) return null
 
             const isDisabled = item.disabled(pathname, user)
-            const isActive = currentSegment === item.path
+            const isActive = sectionToLabel[section] === item.label
 
             return (
                 <li key={item.label} className="sidebar-item">

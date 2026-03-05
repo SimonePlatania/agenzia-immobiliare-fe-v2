@@ -1,54 +1,9 @@
-.sidebar-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.sidebar-item:nth-child(odd) .sidebar-link {
-    background-color: snow;
-}
-
-.sidebar-item:nth-child(even) .sidebar-link {
-    background-color: #e9ecef;
-}
-
-.sidebar-link {
-    display: block;
-    padding: 0.55rem 0.75rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: #212529;
-    border: none;
-    border-radius: 0;
-    text-decoration: none;
-    transition: background-color 0.15s, color 0.15s;
-}
-
-.sidebar-link:hover {
-    background-color: #212529;
-    color: #7e7272;
-}
-
-.sidebar-link.active {
-    background-color: #212529;
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.sidebar-link.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
 .fieldset-sidebar {
     border: 1px solid #dee2e6;
     border-radius: 0.75rem;
     padding: 1rem;
     background-color: #ffffff;
-    width: 220px;
+    width: clamp(160px, 20vw, 220px);
     flex-shrink: 0;
     align-self: flex-start;
     margin-top: 3.2rem;
@@ -64,4 +19,57 @@
     font-size: 1rem;
     font-weight: 700;
     background-color: #ffffff;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.sidebar-item:nth-child(odd) .sidebar-link {
+    background-color: #fafafa;
+}
+
+.sidebar-item:nth-child(even) .sidebar-link {
+    background-color: #e9ecef;
+}
+
+.sidebar-link {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #212529;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.sidebar-link:hover {
+    background-color: #212529;
+    color: #8a7a7a;
+}
+
+.sidebar-link.active {
+    background-color: transparent;
+    color: #212529;
+    font-weight: 700;
+    border-left-color: #212529;
+}
+
+.sidebar-link.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .fieldset-sidebar {
+        width: 100%;
+        margin-top: 0;
+        flex-shrink: 1;
+    }
 }

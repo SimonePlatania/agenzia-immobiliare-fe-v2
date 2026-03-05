@@ -1,10 +1,12 @@
 import { Col, Modal, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
 import { InputTypes } from "@/utils/constants/consts"
-import { useForm, UseFormProps, UseFormReturn } from "react-hook-form"
+import { Resolver, useForm, UseFormProps, UseFormReturn } from "react-hook-form"
 import { DomandaRequest } from "@/utils/types"
 import { useSelector } from "react-redux"
 import { AppState } from "@/store/store"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { domandaSchema } from "@/components/yupSchemas/yupSchema"
 
 export const ModalDomanda = ({
     show,
@@ -15,11 +17,6 @@ export const ModalDomanda = ({
     setShow: any
     onConfirm?: any
 }) => {
-    const handleClose = () => {
-        setShow(false)
-    }
-    const { titolo } = useSelector((state: AppState) => state.annuncio)
-    const titoloModale = `Fai domanda per l'annuncio: ${titolo}`
     const formConfig: UseFormProps<DomandaRequest> = {
         defaultValues: {
             domanda: ""
@@ -27,10 +24,19 @@ export const ModalDomanda = ({
         resetOptions: {
             keepDirtyValues: true,
             keepErrors: true
-        }
+        },
+        resolver: yupResolver(
+            domandaSchema
+        ) as unknown as Resolver<DomandaRequest>
     }
 
     const form: UseFormReturn<any> = useForm<DomandaRequest>(formConfig)
+    const { titolo } = useSelector((state: AppState) => state.annuncio)
+    const titoloModale = `Fai domanda per l'annuncio: ${titolo}`
+
+    const handleClose = () => {
+        setShow(false)
+    }
 
     return (
         <>

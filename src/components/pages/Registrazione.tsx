@@ -16,6 +16,8 @@ import { getErrorGrowl } from "@/utils/custom-utils"
 import { AppPaths } from "@/utils/constants/routes"
 import { setSection } from "@/store/slices/sectionSlice"
 import { setLogin } from "@/store/slices/loginSlice"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { registrazioneSchema } from "@/components/yupSchemas/yupSchema"
 
 const formConfig: UseFormProps<UtenteRequest> = {
     defaultValues: {
@@ -29,7 +31,9 @@ const formConfig: UseFormProps<UtenteRequest> = {
     resetOptions: {
         keepDirtyValues: true,
         keepErrors: true
-    }
+    },
+    resolver: yupResolver(registrazioneSchema),
+    mode: "onChange"
 }
 
 export const Registrazione = () => {
