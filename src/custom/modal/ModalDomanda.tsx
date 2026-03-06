@@ -61,7 +61,11 @@ export const ModalDomanda = ({
                     <button
                         className="btn btn-general-modal btn-primary order-1"
                         type="button"
-                        onClick={form.handleSubmit(onConfirm)}
+                        onClick={form.handleSubmit(
+                            onConfirm,
+                            (errors) =>
+                                console.log("Errori validazione:", errors) // ← secondo argomento = callback errori
+                        )}
                     >
                         Invia
                     </button>

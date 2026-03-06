@@ -14,6 +14,7 @@ import { initialStateRedux } from "@/utils/constants/consts"
 import domandaSlice from "@/store/slices/domandaSlice"
 import listaDomandeSlice from "@/store/slices/listaDomandeSlice"
 import utenteDettaglioSlice from "@/store/slices/utenteDettaglioSlice"
+import annunciPaginazioneSlice from "@/store/slices/annunciPaginazioneSlice"
 
 const appReducer = combineReducers({
     [rootApi.reducerPath]: rootApi.reducer,
@@ -29,6 +30,7 @@ const appReducer = combineReducers({
     listaAnnunci: listaAnnunciSlice,
     domanda: domandaSlice,
     listaDomande: listaDomandeSlice,
+    annunciPaginazione: annunciPaginazioneSlice,
     utenteDettaglio: utenteDettaglioSlice
 })
 

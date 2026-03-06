@@ -1,8 +1,10 @@
-import { reduxBatch } from "@manaflair/redux-batch"
 import { configureStore } from "@reduxjs/toolkit"
 import createRootReducer from "./slices"
-import {rootApi, successMiddleware, unauthenticatedMiddleware} from "@/api/rootApi";
-
+import {
+    rootApi,
+    successMiddleware,
+    unauthenticatedMiddleware
+} from "@/api/rootApi"
 
 export const storeApp = configureStore({
     reducer: createRootReducer(),
@@ -13,7 +15,9 @@ export const storeApp = configureStore({
             .concat(unauthenticatedMiddleware)
             .concat(successMiddleware)
             .concat(rootApi.middleware),
-    devTools: true,
-    enhancers: [reduxBatch]
+    devTools: process.env.NODE_ENV !== "production" && {
+        maxAge: 10,
+        actionsBlacklist: ["annunciPaginazione/setAnnunci"]
+    }
 })
 export type AppState = ReturnType<typeof storeApp.getState>

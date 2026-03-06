@@ -21,10 +21,12 @@ export const onFileSelected = (event: ChangeEvent<any>): Promise<any> => {
         }
         const splittedName = file.name.split(/[.]/g)
 
-        if (!/^(pdf|p7m|jpeg)$/.test(splittedName[splittedName.length - 1])) {
+        if (
+            !/^(jpeg|jpg|png|webp)$/.test(splittedName[splittedName.length - 1])
+        ) {
             reject(
                 new Error(
-                    "Formato non valido, selezionare un file PDF, P7M o JPEG"
+                    "Formato non valido, selezionare un file JPEG, PNG o WEBP"
                 )
             )
             return
@@ -155,6 +157,44 @@ export const getNumeroRisulati = (elementi: Array<any>): string => {
     return `Numero risultati: ${elementi.length}`
 }
 
-export const getUtente = (id: number | string): string => {
-    return id === "0" ? "Utente anonimo" : "Utente registrato"
+export const getNomeRuolo = (id: number): string => {
+    switch (id) {
+        case 1:
+            return "Amministratore"
+        case 2:
+            return "Cliente"
+        case 3:
+            return "Utente"
+        default:
+            return "Ruolo non trovato"
+    }
+}
+
+export const getNomePiano = (id: number): string => {
+    switch (id) {
+        case 0:
+            return "Piano terra"
+        case 1:
+            return "Primo piano"
+        case 2:
+            return "Secondo piano"
+        case 3:
+            return "Terzo piano"
+        case 4:
+            return "Quarto piano"
+        case 5:
+            return "Quinto piano"
+        case 6:
+            return "Sesto piano"
+        case 7:
+            return "Settimo piano"
+        case 8:
+            return "Ottavo piano"
+        case 9:
+            return "Nono piano"
+        case 10:
+            return "Decimo piano"
+        default:
+            return "Piano non trovato"
+    }
 }

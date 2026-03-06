@@ -66,6 +66,7 @@ export enum Errors {
     TYPE_REQUIRED = "Campo obbligatorio",
     EMPTY_PRODOTTI = "Aggiungere almeno un prodotto",
     TYPE_DATE = "Il campo deve contenere una data valida",
+    VALUE_NOT_VALID = "Valore non valido",
     MIN_TODAY = "La data non può essere antecedente alla data odierna",
     TYPE_ORARIO = "Il campo deve contenere un orario valido",
     TYPE_EMAIL = "Il campo deve contenere un indirizzo email valido",

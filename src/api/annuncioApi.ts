@@ -9,7 +9,7 @@ import { AnnuncioRest, RicercaRest } from "@/utils/constants/endpoints"
 
 export const annuncioApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
-        creaAnnuncio: build.mutation<void, Annuncio>({
+        creaAnnuncio: build.mutation<Annuncio, Annuncio>({
             query: (body) => ({
                 url: `${AnnuncioRest.ANNUNCIO}${AnnuncioRest.REGISTRA_ANNUNCIO}`,
                 method: "POST",
@@ -17,6 +17,26 @@ export const annuncioApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Annuncio"]
         }),
+        uploadFoto: build.mutation<void, { idAnnuncio: number; foto: string }>({
+            query: ({ idAnnuncio, foto }) => {
+                const byteChars = atob(foto)
+                const byteArray = new Uint8Array(byteChars.length)
+                for (let i = 0; i < byteChars.length; i++) {
+                    byteArray[i] = byteChars.charCodeAt(i)
+                }
+                const blob = new Blob([byteArray], { type: "image/*" })
+                const formData = new FormData()
+                formData.append("foto", blob)
+
+                return {
+                    url: `${AnnuncioRest.ANNUNCIO}/${idAnnuncio}${AnnuncioRest.UPLOAD_FOTO}`,
+                    method: "POST",
+                    body: formData
+                }
+            },
+            invalidatesTags: ["Annuncio"]
+        }),
+
         modificaAnnuncio: build.mutation<void, Annuncio>({
             query: (body) => ({
                 url: `${AnnuncioRest.ANNUNCIO}${AnnuncioRest.MODIFICA_ANNUNCIO}`,
@@ -47,8 +67,7 @@ export const annuncioApi = rootApi.injectEndpoints({
                     ...(page !== undefined && { page }),
                     ...(pageSize !== undefined && { pageSize })
                 }
-            }),
-            invalidatesTags: ["Annuncio"]
+            })
         }),
         ricercaAnnuncioById: build.query<Annuncio, number>({
             query: (id) => ({
@@ -76,6 +95,7 @@ export const annuncioApi = rootApi.injectEndpoints({
 
 export const {
     useCreaAnnuncioMutation,
+    useUploadFotoMutation,
     useRicercaAnnuncioMutation,
     useRicercaAnnuncioByIdQuery,
     useModificaAnnuncioMutation,

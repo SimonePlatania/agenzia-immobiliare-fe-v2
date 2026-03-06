@@ -1,21 +1,28 @@
-import { useGetListaUtentiQuery, useGetUtenteByIdQuery } from "@/api/utenteApi"
+import {
+    useGetListaUtentiQuery,
+    useLazyGetUtenteByIdQuery
+} from "@/api/utenteApi"
 import { useGetRuoliQuery } from "@/api/tipologicheApi"
-import { Dispatch, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Dispatch } from "react"
 import { AnyAction } from "@reduxjs/toolkit"
 import { useDispatch } from "react-redux"
 import { UtenteResponse } from "@/utils/types"
 import { Sections } from "@/utils/constants/consts"
 import { setSection } from "@/store/slices/sectionSlice"
 import { setUtenteDettaglio } from "@/store/slices/utenteDettaglioSlice"
-import { scrollToTop } from "@/utils/genericUtils"
+import {
+    getNomeRuolo,
+    getNumeroRisulati,
+    scrollToTop
+} from "@/utils/genericUtils"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
+import { getErrorGrowl } from "@/utils/custom-utils"
+import { createErrorGrowl } from "@/custom/modal/Growl"
 
 export const ListaUtenti = () => {
-    const [idUtente, setIdUtente] = useState<number | null>(null)
     const dispatch: Dispatch<AnyAction> = useDispatch()
-    const navigate = useNavigate()
-    const [utenteSelezionato, setUtenteSelezionato] =
-        useState<UtenteResponse | null>(null)
+
+    const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
 
     const {
         data: utenti,
@@ -23,24 +30,28 @@ export const ListaUtenti = () => {
         error: utentiIsError
     } = useGetListaUtentiQuery()
 
-    const {
-        data: utente,
-        isLoading: utenteIsLoading,
-        error: utenteIsError
-    } = useGetUtenteByIdQuery(Number(utenteSelezionato?.id), {
-        skip: utenteSelezionato === undefined
-    })
+    const [getUtenteById] = useLazyGetUtenteByIdQuery()
 
-    const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
-
-    useEffect(() => {
-        if (utente && utenteSelezionato) {
-            scrollToTop()
-            dispatch(setUtenteDettaglio(utente))
+    const handleModificaUtente = async (
+        utente: UtenteResponse
+    ): Promise<void> => {
+        try {
+            if (!utente.id) {
+                return
+            }
+            dispatch(enableSpinner())
+            const utenteDettaglio = await getUtenteById(
+                Number(utente.id)
+            ).unwrap()
+            dispatch(setUtenteDettaglio(utenteDettaglio))
             dispatch(setSection(Sections.MODIFICA_UTENTE))
-            setUtenteSelezionato(null)
+            scrollToTop()
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
-    }, [utente])
+    }
 
     return (
         <>
@@ -66,16 +77,16 @@ export const ListaUtenti = () => {
                                 <td>{utente.cognome}</td>
                                 <td>{utente.email}</td>
                                 <td>{utente.telefono}</td>
-                                <td>{utente.ruoloId}</td>
+                                <td>{getNomeRuolo(utente.ruoloId)}</td>
                                 <td className={""}>
                                     <div className="d-flex gap-2 justify-content-center ">
                                         <button
                                             title="Modifica utente"
                                             className="btn btn-sm btn-mini order-3"
                                             type={"button"}
-                                            onClick={() => {
-                                                setUtenteSelezionato(utente)
-                                            }}
+                                            onClick={() =>
+                                                handleModificaUtente(utente)
+                                            }
                                         >
                                             <i className="bi bi-pencil-square"></i>
                                         </button>
@@ -84,6 +95,16 @@ export const ListaUtenti = () => {
                             </tr>
                         ))}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td
+                                colSpan={12}
+                                className="text-sm-center text-muted"
+                            >
+                                {getNumeroRisulati(utenti ?? [])}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </fieldset>
         </>

@@ -9,7 +9,8 @@ import {
 } from "@/api/tipologicheApi"
 import {
     useCreaAnnuncioMutation,
-    useModificaAnnuncioMutation
+    useModificaAnnuncioMutation,
+    useUploadFotoMutation
 } from "@/api/annuncioApi"
 import { Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
@@ -39,6 +40,7 @@ import {
 } from "@/api/domandaRispostaApi"
 import { AnyAction } from "@reduxjs/toolkit"
 import { getErrorGrowl } from "@/utils/custom-utils"
+import { isEqual } from "lodash"
 
 const formConfig: UseFormProps<Annuncio> = {
     defaultValues: {
@@ -57,7 +59,8 @@ const formConfig: UseFormProps<Annuncio> = {
         esisteAscensore: "",
         esisteGarage: "",
         esistePostoAutoAssegnato: "",
-        esisteTerrazzo: ""
+        esisteTerrazzo: "",
+        foto: ""
     },
     resetOptions: {
         keepDirtyValues: true,
@@ -70,8 +73,6 @@ const formConfig: UseFormProps<Annuncio> = {
 const CreazioneAnnuncio = () => {
     const dispatch: Dispatch<AnyAction> = useDispatch()
     const navigate = useNavigate()
-    const domanda = useSelector((state: AppState) => state.domanda)
-
     const [creaAnnuncio, { isLoading, error }] = useCreaAnnuncioMutation()
     const { data: tipologieAnnunci, isLoading: tipologieAnnunciLoading } =
         useGetTipoAnnunciQuery()
@@ -86,12 +87,18 @@ const CreazioneAnnuncio = () => {
         useFaiDomandaMutation()
 
     const form: UseFormReturn<any> = useForm<Annuncio>(formConfig)
+    const {
+        formState: { isValid }
+    } = form
+
     const { id } = useSelector((state: AppState) => state.utente)
     const annuncioInStore = useSelector((state: AppState) => state.annuncio)
     const section = useSelector((state: AppState) => state.section)
     const { ruolo } = useSelector((state: AppState) => state.utente)
-    const [showDomanda, setshowDomanda] = useState(false)
-    const [showAnnuncio, setShowAnnuncio] = useState(false)
+    const [showDomanda, setShowDomanda] = useState(false)
+    const [showConfermaModifica, setShowConfermaModifica] = useState(false)
+    const [showConfermaInserimento, setShowConfermaInserimento] =
+        useState(false)
 
     const {
         data: domande,
@@ -99,12 +106,14 @@ const CreazioneAnnuncio = () => {
         error: domandeError
     } = useGetDomandePersonaliQuery()
 
-    const isEditMode: boolean = section === Sections.MODIFICA
-    const isViewMode: boolean = section === Sections.DETTAGLIO
-    const isReadOnly: boolean = isViewMode
-    const isModifyMode: boolean = isEditMode
+    const [uploadFoto, { isLoading: isLoadingUpload }] = useUploadFotoMutation()
+
+    const isReadOnly: boolean = section === Sections.DETTAGLIO
+    const isModifyMode: boolean = section === Sections.MODIFICA
     const isAdmin: boolean = ruolo === Ruolo.AMMINISTRATORE
     const isUtente: boolean = ruolo === Ruolo.UTENTE
+    const isDisabled: boolean =
+        isEqual(form.watch(), annuncioInStore) || isLoadingModifica || !isValid
 
     const isDomandaGiaInviata = (): boolean => {
         if (!domande || !annuncioInStore?.id || !id) return false
@@ -116,32 +125,13 @@ const CreazioneAnnuncio = () => {
         )
     }
 
-    const {
-        formState: { isValid }
-    } = form
-
-    const handleAnnuncio = async (): Promise<void> => {
-        try {
-            const values = form.watch()
-            await creaAnnuncio(values).unwrap()
-            dispatch(aggiornaListaAnnunci(values))
-            dispatch(
-                setGrowl(createSuccessGrowl("Annuncio creato con successo"))
-            )
-            scrollToTop()
-        } catch (err: unknown) {
-            setShowAnnuncio(false)
-            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
-        }
-    }
-
     const handleReset = () => {
         form.reset(initialStateAnnuncio)
         scrollToTop()
     }
 
     useEffect(() => {
-        if (isViewMode || isEditMode) {
+        if (isReadOnly || isModifyMode) {
             form.reset(annuncioInStore)
         }
 
@@ -157,8 +147,41 @@ const CreazioneAnnuncio = () => {
         navigate(AppPaths.RICERCA_MODIFICA)
     }
 
-    const handleModifica = async (data: Annuncio): Promise<void> => {
-        if (isLoading || !isValid) {
+    const handleInserisciAnnuncio = async (): Promise<void> => {
+        if (!isValid || isLoading) {
+            return
+        }
+        try {
+            dispatch(enableSpinner())
+            const values = form.getValues()
+            const annuncio = await creaAnnuncio(values).unwrap()
+
+            if (values.foto && annuncio.id) {
+                await uploadFoto({
+                    idAnnuncio: annuncio.id,
+                    foto: values.foto
+                }).unwrap()
+            }
+
+            dispatch(aggiornaListaAnnunci(values))
+            dispatch(resetAnnuncio())
+            dispatch(
+                setGrowl(createSuccessGrowl("Annuncio creato con successo"))
+            )
+            setShowConfermaInserimento(false)
+            navigate(AppPaths.RICERCA_MODIFICA)
+            dispatch(setSection(Sections.RICERCA))
+            scrollToTop()
+        } catch (err: unknown) {
+            setShowConfermaInserimento(false)
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
+        }
+    }
+
+    const handleModificaAnnuncio = async (data: Annuncio): Promise<void> => {
+        if (isDisabled) {
             return
         }
         dispatch(enableSpinner())
@@ -171,10 +194,12 @@ const CreazioneAnnuncio = () => {
                 setGrowl(createSuccessGrowl("Modifica effettuata con successo"))
             )
             scrollToTop()
-            setShowAnnuncio(true)
+            dispatch(setSection(Sections.RICERCA))
+            setShowConfermaModifica(false)
             navigate(AppPaths.RICERCA_MODIFICA)
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+            setShowConfermaModifica(false)
         } finally {
             dispatch(disableSpinner())
         }
@@ -187,8 +212,11 @@ const CreazioneAnnuncio = () => {
         navigate(AppPaths.RICERCA_MODIFICA)
     }
 
-    const handleDomanda = async (data: DomandaRequest): Promise<void> => {
+    const handleDomandaAnnuncio = async (
+        data: DomandaRequest
+    ): Promise<void> => {
         try {
+            dispatch(enableSpinner())
             await faiDomanda({
                 ...data,
                 annuncioId: annuncioInStore.id,
@@ -198,18 +226,25 @@ const CreazioneAnnuncio = () => {
             dispatch(
                 setGrowl(createSuccessGrowl("Domanda effettuata con successo"))
             )
+            setShowDomanda(false)
             scrollToTop()
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
             dispatch(setSection(Sections.RICERCA))
             navigate(AppPaths.RICERCA_MODIFICA)
             scrollToTop()
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
     return (
         <>
-            <form onSubmit={form.handleSubmit(handleModifica)}>
+            <form
+                onSubmit={form.handleSubmit(() =>
+                    setShowConfermaInserimento(true)
+                )}
+            >
                 <fieldset className="fieldset-bordered fieldset-main mt-5">
                     <legend>
                         {isReadOnly
@@ -236,10 +271,14 @@ const CreazioneAnnuncio = () => {
                             {!isReadOnly && (
                                 <Col sm={12} md={6}>
                                     <CustomInput
-                                        field="descrizione"
+                                        field="foto"
                                         descr="Foto immobile"
-                                        placeholder="Inserisci foto dell'immobile"
                                         type={InputTypes.FILE}
+                                        fileTypes={[
+                                            "image/jpeg",
+                                            "image/png",
+                                            "image/webp"
+                                        ]}
                                         form={form}
                                         readOnly={isReadOnly}
                                     />
@@ -433,17 +472,12 @@ const CreazioneAnnuncio = () => {
                             md={12}
                             className="d-flex justify-content-center mt-4 mb-5"
                         >
-                            {!isViewMode && !isEditMode && (
+                            {!isReadOnly && !isModifyMode && (
                                 <>
                                     <button
                                         className="btn btn-general btn-primary px-4 order-1"
                                         type="submit"
                                         disabled={isLoading || !isValid}
-                                        onClick={async (): Promise<void> => {
-                                            // const isValid = await form.trigger()
-                                            // if (isValid) setShowAnnuncio(true)
-                                            // navigate(AppPaths.RICERCA_MODIFICA)
-                                        }}
                                     >
                                         <i className="bi bi-plus-circle-dotted"></i>
                                         {isLoading
@@ -451,7 +485,7 @@ const CreazioneAnnuncio = () => {
                                             : " INSERISCI ANNUNCIO"}
                                     </button>
                                     <button
-                                        className="btn-general btn btn-primary px-4 order-2"
+                                        className="btn-general-secondary btn btn-primary px-4 order-2"
                                         type="button"
                                         onClick={handleReset}
                                         disabled={isLoading}
@@ -466,7 +500,7 @@ const CreazioneAnnuncio = () => {
                             {isReadOnly && (
                                 <>
                                     <button
-                                        className="btn btn-general btn-primary px-4 order-2"
+                                        className="btn btn-general-secondary btn-primary px-4 order-2"
                                         type="button"
                                         onClick={handleRitornaRicerca}
                                     >
@@ -480,7 +514,7 @@ const CreazioneAnnuncio = () => {
                                             }
                                             disabled={isDomandaGiaInviata()}
                                             type="button"
-                                            onClick={() => setshowDomanda(true)}
+                                            onClick={() => setShowDomanda(true)}
                                         >
                                             <i className="bi bi-arrow-90deg-right"></i>{" "}
                                             FAI DOMANDA
@@ -511,8 +545,11 @@ const CreazioneAnnuncio = () => {
                                 <>
                                     <button
                                         className="btn btn-general btn-primary px-4 order-1"
-                                        type="submit"
-                                        disabled={isLoading}
+                                        type="button"
+                                        disabled={isDisabled}
+                                        onClick={() =>
+                                            setShowConfermaModifica(true)
+                                        }
                                     >
                                         {isLoading
                                             ? "Salvataggio..."
@@ -520,7 +557,7 @@ const CreazioneAnnuncio = () => {
                                     </button>
 
                                     <button
-                                        className="btn btn-general btn-primary px-4 order-3"
+                                        className="btn btn-general-secondary btn-primary px-4 order-3"
                                         type="button"
                                         onClick={handleAnnullaModifica}
                                     >
@@ -536,22 +573,35 @@ const CreazioneAnnuncio = () => {
 
             <ModalDomanda
                 show={showDomanda}
-                setShow={setshowDomanda}
+                setShow={setShowDomanda}
                 onConfirm={async (data: DomandaRequest): Promise<void> => {
-                    await handleDomanda(data)
-                    setshowDomanda(false)
+                    await handleDomandaAnnuncio(data)
+                    setShowDomanda(false)
                 }}
             />
             <CustomModal
-                show={showAnnuncio}
-                setShow={setShowAnnuncio}
+                show={showConfermaInserimento}
+                setShow={setShowConfermaInserimento}
                 title="Attenzione"
                 textBody="Stai per creare l'annuncio, vuoi procedere?"
                 confirmText="Conferma"
                 cancelText="Annulla"
                 onConfirm={async (): Promise<void> => {
-                    await handleAnnuncio()
-                    setShowAnnuncio(false)
+                    await handleInserisciAnnuncio()
+                    setShowConfermaInserimento(false)
+                }}
+            />
+
+            <CustomModal
+                show={showConfermaModifica}
+                setShow={setShowConfermaModifica}
+                title="Attenzione"
+                textBody="Stai per modificare l'annuncio, vuoi procedere?"
+                confirmText="Conferma"
+                cancelText="Annulla"
+                onConfirm={async (): Promise<void> => {
+                    await handleModificaAnnuncio(form.getValues())
+                    setShowConfermaModifica(false)
                 }}
             />
         </>

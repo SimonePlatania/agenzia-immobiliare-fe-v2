@@ -5,9 +5,9 @@ import { Button, Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
 import { InputTypes, Ruolo, Sections } from "@/utils/constants/consts"
 import { useGetRuoliQuery } from "@/api/tipologicheApi"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { AppState } from "@/store/store"
 import { Dispatch } from "react"
@@ -41,6 +41,10 @@ export const Registrazione = () => {
         useRegistrazioneUserMutation()
     const { data: ruoli, isLoading: ruoliLoading } = useGetRuoliQuery()
     const form: UseFormReturn<any> = useForm<UtenteRequest>(formConfig)
+
+    const {
+        formState: { isValid }
+    } = form
     const { ruolo } = useSelector((state: AppState) => state.utente)
 
     const navigate = useNavigate()
@@ -50,6 +54,7 @@ export const Registrazione = () => {
 
     const handleRegister = async (): Promise<void> => {
         try {
+            dispatch(enableSpinner())
             await registrazioneUser(form.watch()).unwrap()
             dispatch(
                 setGrowl(createSuccessGrowl("Utente registrato con successo!"))
@@ -64,21 +69,15 @@ export const Registrazione = () => {
             }
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
     return (
-        <form
-            onSubmit={form.handleSubmit(handleRegister)}
-            style={{
-                marginTop: "50px",
-                marginBottom: "50px",
-                width: "50%",
-                marginLeft: "25%"
-            }}
-        >
-            <div className="w-100">
-                <fieldset className="fieldset-bordered fieldset-main mt-5">
+        <form onSubmit={form.handleSubmit(handleRegister)}>
+            <div className="p-lg-5">
+                <fieldset className="fieldset-bordered fieldset-main">
                     <legend>Registrazione utente</legend>
 
                     <Row>
@@ -146,28 +145,40 @@ export const Registrazione = () => {
                     />
 
                     <Row>
-                        <Col sm={12} md={12}>
+                        <Col sm={12} md={6}>
                             <Button
                                 type={"submit"}
-                                disabled={isLoading}
+                                disabled={isLoading || !isValid}
                                 className="btn btn-general"
                                 variant="outline-dark"
                             >
                                 <i className="bi bi-sign-intersection-fill"></i>
                                 {isAdmin ? " REGISTRA UTENTE" : " REGISTRATI"}
                             </Button>
-                            {!isAdmin && (
-                                <Button
-                                    variant="outline-dark"
-                                    disabled={isLoading}
-                                    onClick={() => navigate("/login")}
-                                    className="btn btn-general"
-                                >
-                                    <i className="bi bi-door-open-fill"></i>
-                                    {isLoading ? " Accesso..." : " LOGIN"}
-                                </Button>
-                            )}
                         </Col>
+                        <Col sm={12} md={6}>
+                            <Button
+                                type={"submit"}
+                                className="btn btn-general-secondary"
+                                variant="outline-dark"
+                            >
+                                PULISCI CAMPI
+                            </Button>
+                        </Col>
+
+                        {!isAdmin && (
+                            <div className="d-flex justify-content-center mt-3">
+                                <p className={"text-muted me-2"}>
+                                    {"Sei già registrato?"}
+                                </p>
+                                <Link
+                                    to={AppPaths.LOGIN}
+                                    className="clickable-row"
+                                >
+                                    Login
+                                </Link>
+                            </div>
+                        )}
                     </Row>
                 </fieldset>
             </div>

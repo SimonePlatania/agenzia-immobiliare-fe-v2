@@ -2,7 +2,7 @@ import { useModificaPasswordMutation } from "@/api/utenteApi"
 import { PasswordChangeRequest } from "@/utils/types"
 import { getErrorGrowl } from "@/utils/custom-utils"
 import { useDispatch } from "react-redux"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
@@ -27,6 +27,11 @@ export const ModificaPassword = () => {
         mode: "onChange"
     }
     const form: UseFormReturn<any> = useForm<PasswordChangeRequest>(formConfig)
+
+    const {
+        formState: { isValid }
+    } = form
+
     const [showModal, setShowModal] = useState<boolean>(false)
 
     const [
@@ -36,10 +41,16 @@ export const ModificaPassword = () => {
 
     const dispatch = useDispatch()
 
+    const isDisabled: boolean = isLoadingPassword || !isValid
+
     const handleModificaPassword = async (
         data: PasswordChangeRequest
     ): Promise<void> => {
+        if (isDisabled) {
+            return
+        }
         try {
+            dispatch(enableSpinner())
             await modificaPassword(data).unwrap()
             dispatch(
                 setGrowl(createSuccessGrowl("Password modificata con successo"))
@@ -49,6 +60,9 @@ export const ModificaPassword = () => {
         } catch (error: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, error)
             setShowModal(false)
+            form.reset()
+        } finally {
+            dispatch(disableSpinner())
         }
     }
     return (
@@ -84,7 +98,7 @@ export const ModificaPassword = () => {
                             className="btn btn-general btn-primary px-4 order-1"
                             type="button"
                             onClick={() => setShowModal(true)}
-                            disabled={isLoadingPassword}
+                            disabled={isDisabled}
                         >
                             {isLoadingPassword ? "Modifica..." : "Modifica"}
                         </button>
@@ -100,7 +114,7 @@ export const ModificaPassword = () => {
                 confirmText={"Conferma"}
                 cancelText={"Annulla"}
                 onConfirm={async (): Promise<void> =>
-                    await handleModificaPassword(form.watch())
+                    await handleModificaPassword(form.getValues())
                 }
             ></CustomModal>
         </>

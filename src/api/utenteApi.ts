@@ -78,6 +78,7 @@ export const {
     useLogoutUserMutation,
     useGetListaUtentiQuery,
     useGetUtenteByIdQuery,
+    useLazyGetUtenteByIdQuery,
     useModificaDatiAnagraficiMutation,
     useModificaPasswordMutation
 } = utenteApi

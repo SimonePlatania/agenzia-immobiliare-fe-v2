@@ -23,6 +23,8 @@ export const loginSchema: ObjectSchema<LoginRequest> = yup.object({
 export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
     cittaId: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(1, Errors.TYPE_REQUIRED)
         .transform((value, originalValue) =>
@@ -30,6 +32,8 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
         ),
     utenteId: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(1, Errors.TYPE_REQUIRED)
         .transform((value, originalValue) =>
@@ -37,6 +41,8 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
         ),
     tipologiaImmobileId: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(1, Errors.TYPE_REQUIRED)
         .transform((value, originalValue) =>
@@ -44,6 +50,8 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
         ),
     tipologiaAnnuncioId: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(1, Errors.TYPE_REQUIRED)
         .transform((value, originalValue) =>
@@ -55,6 +63,8 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
         .min(10, "Il titolo deve avere almeno 10 caratteri"),
     speseAggiuntive: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(0, "Le spese aggiuntive non posso essere inferiori a 0"),
     prezzo: yup
@@ -65,6 +75,8 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
     zona: yup.string().required(Errors.TYPE_REQUIRED),
     mq: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(
             1,
@@ -72,32 +84,38 @@ export const annuncioSchema: ObjectSchema<Annuncio> = yup.object({
         ),
     numeroStanze: yup
         .number()
+        .typeError(Errors.TYPE_NUMBER)
+
         .required(Errors.TYPE_REQUIRED)
         .min(1, "Il numero di stanze non può essere inferiore o uguale a 0"),
-    piano: yup.number().required("Il piano è obbligatorio"),
+    piano: yup
+        .number()
+        .typeError(Errors.TYPE_NUMBER)
+        .required("Il piano è obbligatorio"),
     esisteAscensore: yup
         .string()
         .required(Errors.TYPE_REQUIRED)
-        .matches(/^(0|1)$/, "Valore non valido"),
+        .matches(/^(0|1)$/, Errors.VALUE_NOT_VALID),
     esisteGarage: yup
         .string()
         .required(Errors.TYPE_REQUIRED)
-        .matches(/^(0|1)$/, "Valore non valido"),
+        .matches(/^(0|1)$/, Errors.VALUE_NOT_VALID),
     esistePostoAutoAssegnato: yup
         .string()
         .required(Errors.TYPE_REQUIRED)
-        .matches(/^(0|1)$/, "Valore non valido"),
+        .matches(/^(0|1)$/, Errors.VALUE_NOT_VALID),
     esisteTerrazzo: yup
         .string()
         .required(Errors.TYPE_REQUIRED)
-        .matches(/^(0|1)$/, "Valore non valido"),
+        .matches(/^(0|1)$/, Errors.VALUE_NOT_VALID),
     dataPubblicazione: yup.date().typeError(Errors.TYPE_DATE),
     rimosso: yup.boolean(),
     id: yup.number().typeError(Errors.TYPE_NUMBER),
     descrizione: yup
         .string()
         .max(800, "La descrizione non può superare gli 800 caratteri"),
-    numeroVisualizzazioni: yup.number()
+    numeroVisualizzazioni: yup.number().typeError(Errors.TYPE_NUMBER),
+    foto: yup.string()
 })
 
 export const registrazioneSchema: ObjectSchema<UtenteRequest> = yup.object({
@@ -125,7 +143,10 @@ export const registrazioneSchema: ObjectSchema<UtenteRequest> = yup.object({
             /^(\+39)?\s?[0-9]{10}$/,
             "Il numero di telefono non rispetta il formato standard richiesto"
         ),
-    ruoloId: yup.number().required(Errors.TYPE_REQUIRED)
+    ruoloId: yup
+        .number()
+        .typeError(Errors.TYPE_NUMBER)
+        .required(Errors.TYPE_REQUIRED)
 })
 
 export const modificaUtenteSchema: ObjectSchema<UtenteResponse> = yup.object({
@@ -150,7 +171,10 @@ export const modificaUtenteSchema: ObjectSchema<UtenteResponse> = yup.object({
             /^(\+39)?\s?[0-9]{10}$/,
             "Il numero di telefono non rispetta il formato standard richiesto"
         ),
-    ruoloId: yup.number().required(Errors.TYPE_REQUIRED)
+    ruoloId: yup
+        .number()
+        .typeError(Errors.TYPE_NUMBER)
+        .required(Errors.TYPE_REQUIRED)
 })
 
 export const modificaPasswordSchema: ObjectSchema<PasswordChangeRequest> =
@@ -168,13 +192,13 @@ export const modificaPasswordSchema: ObjectSchema<PasswordChangeRequest> =
 export const rispostaSchema = yup.object({
     risposta: yup
         .string()
-        .required("Il campo è obbligatorio")
+        .required(Errors.TYPE_REQUIRED)
         .max(500, "La risposta non può superare i 500 caratteri")
 })
 
 export const domandaSchema = yup.object({
-    risposta: yup
+    domanda: yup
         .string()
-        .required("Il campo è obbligatorio")
+        .required(Errors.TYPE_REQUIRED)
         .max(500, "La domanda non può superare i 500 caratteri")
 })

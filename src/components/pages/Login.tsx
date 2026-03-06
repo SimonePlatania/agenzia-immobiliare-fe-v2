@@ -32,6 +32,9 @@ const Login = () => {
     const [loginUser, { isLoading, error }] = useLoginUserMutation()
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const form: UseFormReturn<any> = useForm<LoginRequest>(formConfig)
+    const {
+        formState: { isValid }
+    } = form
     const dispatch: Dispatch<AnyAction> = useDispatch()
     const navigate = useNavigate()
 
@@ -84,7 +87,7 @@ const Login = () => {
                     className="btn btn-general"
                     variant="outline-dark"
                     type={"submit"}
-                    disabled={isLoading}
+                    disabled={isLoading || !isValid}
                     style={{ marginTop: "10px" }}
                 >
                     <i className="bi bi-door-open-fill"></i>

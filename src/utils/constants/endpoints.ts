@@ -39,5 +39,6 @@ export enum AnnuncioRest {
     GET_ALL_DOMANDE = `/lista-domande`,
     GET_ALL_DOMANDE_PERSONALI = `/lista-domande-personali`,
     DATI_UTENTE_ANNUNCIO = `/dati-utente-annuncio`,
-    DATI_UTENTE_DOMANDA = `/dati-utente-domanda`
+    DATI_UTENTE_DOMANDA = `/dati-utente-domanda`,
+    UPLOAD_FOTO = `/foto`
 }

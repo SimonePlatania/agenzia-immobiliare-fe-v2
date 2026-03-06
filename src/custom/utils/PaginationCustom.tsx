@@ -1,5 +1,5 @@
 import { Pagination } from "react-bootstrap"
-import type {PaginazioneProps} from "../../utils/types.ts";
+import type { PaginazioneProps } from "@/utils/types"
 
 //Passando allPages sto passando direttamente totalPages (non passare totalItems)
 //Passando totalItems sto passando il numero totale di elementi che viene convertito in totalPages (non passare allPages)
@@ -72,25 +72,27 @@ const PaginazioneCustom = ({
     }
 
     return (
-        <Pagination className="justify-content-center pb-3">
-            <Pagination.First
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
-            />
-            <Pagination.Prev
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-            />
-            {paginationItems}
-            <Pagination.Next
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-            />
-            <Pagination.Last
-                onClick={() => handlePageChange(totalPages)}
-                disabled={currentPage === totalPages}
-            />
-        </Pagination>
+        <div className="paginazione-custom">
+            <Pagination className="justify-content-center pb-3">
+                <Pagination.First
+                    onClick={() => handlePageChange(1)}
+                    disabled={currentPage === 1}
+                />
+                <Pagination.Prev
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                />
+                {paginationItems}
+                <Pagination.Next
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                />
+                <Pagination.Last
+                    onClick={() => handlePageChange(totalPages)}
+                    disabled={currentPage === totalPages}
+                />
+            </Pagination>
+        </div>
     )
 }
 

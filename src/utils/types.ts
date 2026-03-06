@@ -41,6 +41,7 @@ export interface Annuncio {
     esisteTerrazzo?: string
     rimosso?: boolean
     numeroVisualizzazioni?: number
+    foto?: string
 }
 
 //UTENTE
