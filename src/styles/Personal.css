@@ -190,7 +190,7 @@ select:focus {
 
 /* ─── BTN MODAL (chiudi) ─────────────────────────────── */
 .btn-general-modal-close {
-    background-color: #717478;
+    background-color: var(--color-dark-secondary);
     color: var(--color-bg);
     border-color: #777b80;
 }

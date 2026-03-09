@@ -100,7 +100,7 @@ export const ModificaPassword = () => {
                             onClick={() => setShowModal(true)}
                             disabled={isDisabled}
                         >
-                            {isLoadingPassword ? "Modifica..." : "Modifica"}
+                            {isLoadingPassword ? "MODIFICA..." : "MODIFICA"}
                         </button>
                     </Col>
                 </Row>

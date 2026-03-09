@@ -98,8 +98,10 @@ export const {
     useUploadFotoMutation,
     useRicercaAnnuncioMutation,
     useRicercaAnnuncioByIdQuery,
+    useLazyRicercaAnnuncioByIdQuery,
     useModificaAnnuncioMutation,
     useRimuoviAnnuncioMutation,
     useGetUtenteByIdAnnuncioQuery,
-    useGetUtenteByIdDomandaQuery
+    useGetUtenteByIdDomandaQuery,
+    useLazyGetUtenteByIdDomandaQuery
 } = annuncioApi

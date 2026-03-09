@@ -1,7 +1,7 @@
 import { useGetDomandePersonaliQuery } from "@/api/domandaRispostaApi"
 import { getErrorGrowl } from "@/utils/custom-utils"
-import { Dispatch, useEffect, useState } from "react"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { Dispatch, useState } from "react"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { useDispatch } from "react-redux"
 import { AnyAction } from "@reduxjs/toolkit"
 import { createErrorGrowl } from "@/custom/modal/Growl"
@@ -14,14 +14,13 @@ import {
 } from "@/utils/genericUtils"
 import { useNavigate } from "react-router-dom"
 import { AppPaths } from "@/utils/constants/routes"
+import { setAnnuncio } from "@/store/slices/annuncioSlice"
+import { useLazyRicercaAnnuncioByIdQuery } from "@/api/annuncioApi"
+import CustomModal from "@/custom/modal/CustomModal"
 import { setSection } from "@/store/slices/sectionSlice"
 import { Sections } from "@/utils/constants/consts"
-import { setAnnuncio } from "@/store/slices/annuncioSlice"
-import { useRicercaAnnuncioByIdQuery } from "@/api/annuncioApi"
-import CustomModal from "@/custom/modal/CustomModal"
 
 export const DomandeUtente = () => {
-    const [id, setId] = useState<number | null>(null)
     const [domandaSelezionata, setDomandaSelezionata] = useState<
         string | null
     >()
@@ -39,37 +38,25 @@ export const DomandeUtente = () => {
         error: domandeError
     } = useGetDomandePersonaliQuery()
 
-    const {
-        data: annuncio,
-        isLoading: annuncioIsLoading,
-        error: annuncioError
-    } = useRicercaAnnuncioByIdQuery(Number(id), { skip: id === null })
+    const [fetchAnnuncio] = useLazyRicercaAnnuncioByIdQuery()
 
     const dispatch: Dispatch<AnyAction> = useDispatch()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (domandeError) {
-            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, domandeError)
-        }
-
-        if (annuncioError) {
-            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, annuncioError)
-        }
-    }, [domandeError])
-
     if (domandeIsLoading) {
         return <div>Caricamento...</div>
     }
-    const handleSetAnnuncio = (): void => {
+    const handleSetAnnuncio = async (annuncioId: number): Promise<void> => {
         try {
+            dispatch(enableSpinner())
+            const annuncio = await fetchAnnuncio(annuncioId).unwrap()
+            dispatch(setAnnuncio(annuncio))
             dispatch(setSection(Sections.DETTAGLIO))
-            if (annuncio) {
-                dispatch(setAnnuncio(annuncio))
-                navigate(AppPaths.ANNUNCIO_DETTAGLIO)
-            }
+            navigate(AppPaths.ANNUNCIO_DETTAGLIO)
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
@@ -91,16 +78,17 @@ export const DomandeUtente = () => {
                         <tbody>
                             {domande?.map((domanda: DomandaResponse) => (
                                 <tr key={domanda.id}>
+                                    <td>{domanda.id}</td>
                                     <td
                                         className="clickable-row"
-                                        onClick={() => {
-                                            setId(domanda.annuncioId)
-                                            handleSetAnnuncio()
-                                        }}
+                                        onClick={() =>
+                                            handleSetAnnuncio(
+                                                domanda.annuncioId
+                                            )
+                                        }
                                     >
-                                        {domanda.id}
+                                        {domanda.titoloAnnuncio}
                                     </td>
-                                    <td>{domanda.titoloAnnuncio}</td>
                                     <td>
                                         {formatDateToDMYHHMM(
                                             domanda.dataDomanda

@@ -11,23 +11,22 @@ import {
 import { DomandaResponse, RispostaDTO } from "@/utils/types"
 import { Dispatch, useEffect, useState } from "react"
 import { AnyAction } from "@reduxjs/toolkit"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import CustomModal from "@/custom/modal/CustomModal"
 import { getErrorGrowl } from "@/utils/custom-utils"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
 import { AppPaths } from "@/utils/constants/routes"
 import { setAnnuncio } from "@/store/slices/annuncioSlice"
 import {
-    useGetUtenteByIdDomandaQuery,
-    useRicercaAnnuncioByIdQuery
+    useLazyGetUtenteByIdDomandaQuery,
+    useLazyRicercaAnnuncioByIdQuery
 } from "@/api/annuncioApi"
 import { setSection } from "@/store/slices/sectionSlice"
 import { Sections } from "@/utils/constants/consts"
 import ModalRisposta from "@/custom/modal/ModalRisposta"
 import { setDomanda } from "@/store/slices/domandaSlice"
-import { AppState } from "@/store/store"
 import { setUtenteDettaglio } from "@/store/slices/utenteDettaglioSlice"
 
 export const GestioneAnnunci = () => {
@@ -48,40 +47,33 @@ export const GestioneAnnunci = () => {
         return risposta !== null && risposta !== ""
     }
 
-    const [utenteSelezionato, setUtenteSelezionato] =
-        useState<DomandaResponse | null>(null)
-    const { annuncioId } = useSelector((state: AppState) => state.domanda)
+    useState<DomandaResponse | null>(null)
 
     const {
         data: domande,
         isLoading: isLoadingDomande,
         error: domandeError
     } = useGetAllDomandeQuery()
-    const { data: utente } = useGetUtenteByIdDomandaQuery(
-        Number(utenteSelezionato?.id),
-        { skip: utenteSelezionato?.annuncioId === undefined }
-    )
-    const {
-        data: annuncio,
-        isLoading: annuncioIsLoading,
-        error: annuncioError
-    } = useRicercaAnnuncioByIdQuery(Number(domandaPerRisposta?.annuncioId), {
-        skip: domandaPerRisposta?.annuncioId === undefined
-    })
+
+    const [fetchAnnuncio] = useLazyRicercaAnnuncioByIdQuery()
+    const [fetchUtente] = useLazyGetUtenteByIdDomandaQuery()
+
     const [
         daiRisposta,
         { isLoading: isLoadingRisposta, error: errorRisposta }
     ] = useDaiRispostaMutation()
 
-    const handleDettaglioAnnuncio = (id: number): void => {
+    const handleSetAnnuncio = async (idDomanda: number): Promise<void> => {
         try {
-            if (annuncio) {
-                dispatch(setAnnuncio(annuncio))
-                navigate(AppPaths.ANNUNCIO_DETTAGLIO)
-                dispatch(setSection(Sections.DETTAGLIO))
-            }
+            dispatch(enableSpinner())
+            const annuncio = await fetchAnnuncio(idDomanda).unwrap()
+            dispatch(setAnnuncio(annuncio))
+            dispatch(setSection(Sections.DETTAGLIO))
+            navigate(AppPaths.ANNUNCIO_DETTAGLIO)
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
@@ -96,6 +88,7 @@ export const GestioneAnnunci = () => {
             return
         }
         try {
+            dispatch(enableSpinner())
             await daiRisposta({
                 ...data,
                 domandaId: domandaPerRisposta.id,
@@ -110,6 +103,21 @@ export const GestioneAnnunci = () => {
         } catch (err: unknown) {
             getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
             setShowRisposta(false)
+        } finally {
+            dispatch(disableSpinner())
+        }
+    }
+
+    const handleDettaglioUtente = async (utenteId: number): Promise<void> => {
+        try {
+            dispatch(enableSpinner())
+            const utente = await fetchUtente(utenteId).unwrap()
+            dispatch(setUtenteDettaglio(utente))
+            dispatch(setSection(Sections.DETTAGLIO_UTENTE))
+        } catch (err: unknown) {
+            getErrorGrowl(dispatch, setGrowl, createErrorGrowl, err)
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
@@ -120,14 +128,6 @@ export const GestioneAnnunci = () => {
 
         dispatch(setDomanda(domande))
     }, [domandeError, domande])
-
-    useEffect(() => {
-        if (utente && utenteSelezionato) {
-            dispatch(setUtenteDettaglio(utente))
-            dispatch(setSection(Sections.DETTAGLIO_UTENTE))
-            setUtenteSelezionato(null)
-        }
-    }, [utente])
 
     return (
         <>
@@ -175,15 +175,11 @@ export const GestioneAnnunci = () => {
                                                 title="Dettaglio annuncio"
                                                 className="btn btn-sm btn-mini order-3"
                                                 type={"button"}
-                                                onClick={() => {
-                                                    setDomandaPerRisposta(
-                                                        domanda
+                                                onClick={() =>
+                                                    handleSetAnnuncio(
+                                                        domanda.annuncioId
                                                     )
-                                                    handleDettaglioAnnuncio(
-                                                        domandaPerRisposta?.annuncioId ??
-                                                            0
-                                                    )
-                                                }}
+                                                }
                                             >
                                                 <i className="bi bi-search"></i>
                                             </button>
@@ -192,8 +188,8 @@ export const GestioneAnnunci = () => {
                                                 className="btn btn-sm btn-mini order-3"
                                                 type={"button"}
                                                 onClick={() =>
-                                                    setUtenteSelezionato(
-                                                        domanda
+                                                    handleDettaglioUtente(
+                                                        domanda.id
                                                     )
                                                 }
                                             >

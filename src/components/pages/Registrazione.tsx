@@ -145,7 +145,7 @@ export const Registrazione = () => {
                     />
 
                     <Row>
-                        <Col sm={12} md={6}>
+                        <Col sm={12} md={isAdmin ? 6 : 12}>
                             <Button
                                 type={"submit"}
                                 disabled={isLoading || !isValid}
@@ -156,15 +156,17 @@ export const Registrazione = () => {
                                 {isAdmin ? " REGISTRA UTENTE" : " REGISTRATI"}
                             </Button>
                         </Col>
-                        <Col sm={12} md={6}>
-                            <Button
-                                type={"submit"}
-                                className="btn btn-general-secondary"
-                                variant="outline-dark"
-                            >
-                                PULISCI CAMPI
-                            </Button>
-                        </Col>
+                        {isAdmin && (
+                            <Col sm={12} md={6}>
+                                <Button
+                                    type={"submit"}
+                                    className="btn btn-general-secondary"
+                                    variant="outline-dark"
+                                >
+                                    PULISCI CAMPI
+                                </Button>
+                            </Col>
+                        )}
 
                         {!isAdmin && (
                             <div className="d-flex justify-content-center mt-3">

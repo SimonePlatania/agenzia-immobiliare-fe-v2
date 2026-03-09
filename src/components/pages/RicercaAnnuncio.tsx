@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl, createSuccessGrowl } from "@/custom/modal/Growl"
-import { Col, Modal, Row } from "react-bootstrap"
+import { Col, Row } from "react-bootstrap"
 import CustomInput from "@/custom/utils/CustomInput"
 import { InputTypes, Ruolo, Sections } from "@/utils/constants/consts"
 import { STATI } from "@/utils/utils"
@@ -29,7 +29,7 @@ import { setAnnuncio } from "@/store/slices/annuncioSlice"
 import { useNavigate } from "react-router-dom"
 import { AppPaths } from "@/utils/constants/routes"
 import { setSection } from "@/store/slices/sectionSlice"
-import { AppState, storeApp } from "@/store/store"
+import { AppState } from "@/store/store"
 import CustomModal from "@/custom/modal/CustomModal"
 import { AnyAction } from "@reduxjs/toolkit"
 import { getErrorGrowl } from "@/utils/custom-utils"
@@ -38,6 +38,7 @@ import {
     setAnnunci
 } from "@/store/slices/annunciPaginazioneSlice"
 import PaginazioneCustom from "@/custom/utils/PaginationCustom"
+import ModalFoto from "@/custom/modal/ModalFoto"
 
 const formConfig: UseFormProps<RicercaRequest> = {
     defaultValues: {
@@ -106,18 +107,12 @@ export const RicercaAnnuncio = () => {
                 page: 0,
                 pageSize: 100
             }).unwrap()
-            console.log("Prima del dispatch:", response.annunci)
             dispatch(
                 setAnnunci({
                     annunci: response.annunci,
                     paginazione: response.paginazione
                 })
             )
-            console.log(
-                "Dopo il dispatch - store:",
-                storeApp.getState().annunciPaginazione
-            )
-
             setRicercaEffettuata(true)
             dispatch(
                 setGrowl(createSuccessGrowl("Ricerca effettuata con successo"))
@@ -367,7 +362,7 @@ export const RicercaAnnuncio = () => {
                                 >
                                     <i className="bi bi-search"></i>
                                     {isLoading
-                                        ? " Creazione..."
+                                        ? " RICERCA IN CORSO..."
                                         : " RICERCA ANNUNCIO"}
                                 </button>
                                 <button
@@ -377,7 +372,7 @@ export const RicercaAnnuncio = () => {
                                     disabled={isLoading}
                                 >
                                     <i className="bi bi-eraser-fill me-2"></i>
-                                    {isLoading ? "Pulizia..." : "PULISCI CAMPI"}
+                                    PULISCI CAMPI
                                 </button>
                             </Col>
                         </Row>
@@ -569,22 +564,7 @@ export const RicercaAnnuncio = () => {
                     />
                 )}
             </>
-            <Modal
-                show={!!fotoModal}
-                onHide={() => setFotoModal(null)}
-                centered
-                size="lg"
-            >
-                <Modal.Body>
-                    {fotoModal && (
-                        <img
-                            src={fotoModal}
-                            alt="Foto immobile"
-                            style={{ width: "100%" }}
-                        />
-                    )}
-                </Modal.Body>
-            </Modal>
+            <ModalFoto fotoModal={fotoModal} setFotoModal={setFotoModal} />
         </>
     )
 }

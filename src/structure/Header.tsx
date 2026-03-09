@@ -6,7 +6,7 @@ import { capitalize } from "lodash"
 import { AppPaths } from "@/utils/constants/routes"
 import { useLogoutUserMutation } from "@/api/utenteApi"
 import { resetAll, setLogoutUtente } from "@/store/slices/utenteSlice"
-import { setGrowl } from "@/store/slices/uiSlice"
+import { disableSpinner, enableSpinner, setGrowl } from "@/store/slices/uiSlice"
 import { createErrorGrowl } from "@/custom/modal/Growl"
 // @ts-ignore
 import logo from "@/img/logo.jpg"
@@ -24,6 +24,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
+            dispatch(enableSpinner())
             await logoutUser().unwrap()
             dispatch(resetAll)
             dispatch(setLogoutUtente())
@@ -32,6 +33,8 @@ const Header = () => {
             const messaggio =
                 (err as ErrorMessage)?.data?.messaggio || "Errore generico"
             dispatch(setGrowl(createErrorGrowl(messaggio)))
+        } finally {
+            dispatch(disableSpinner())
         }
     }
 
